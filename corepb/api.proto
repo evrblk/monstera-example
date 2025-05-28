@@ -1,0 +1,182 @@
+syntax = "proto3";
+
+option go_package = "github.com/evrblk/monstera-example/corepb";
+
+package com.evrblk.monstera_example.corepb;
+
+// accounts
+
+message CreateAccountRequest {
+  uint64 account_id = 1;
+  string email = 2;
+  string full_name = 3;
+  int64 now = 4;
+}
+
+message CreateAccountResponse {
+  Account account = 1;
+}
+
+message ListAccountsRequest {}
+
+message ListAccountsResponse {
+  repeated Account accounts = 1;
+}
+
+message GetAccountRequest {
+  uint64 account_id = 1;
+}
+
+message GetAccountResponse {
+  Account account = 1;
+}
+
+message UpdateAccountRequest {
+  uint64 account_id = 1;
+  string full_name = 2;
+  int64 now = 3;
+}
+
+message UpdateAccountResponse {
+  Account account = 1;
+}
+
+message DeleteAccountRequest {
+  uint64 account_id = 1;
+}
+
+message DeleteAccountResponse {}
+
+message Account {
+  uint64 id = 1;
+  string email = 2;
+  string full_name = 3;
+  int64 created_at = 4;
+  int64 updated_at = 5;
+}
+
+// Namespaces
+
+message CreateNamespaceRequest {
+  uint64 account_id = 1;
+  string name = 2;
+  string description = 3;
+  int64 now = 4;
+  int64 max_number_of_namespaces = 5;
+}
+
+message CreateNamespaceResponse {
+  Namespace namespace = 1;
+}
+
+message ListNamespacesRequest {
+  uint64 account_id = 1;
+}
+
+message ListNamespacesResponse {
+  repeated Namespace namespaces = 1;
+}
+
+message GetNamespaceRequest {
+  NamespaceId namespace_id = 1;
+}
+
+message GetNamespaceResponse {
+  Namespace namespace = 1;
+}
+
+message DeleteNamespaceRequest {
+  NamespaceId namespace_id = 1;
+}
+
+message DeleteNamespaceResponse {}
+
+message UpdateNamespaceRequest {
+  NamespaceId namespace_id = 1;
+  string description = 2;
+  int64 now = 3;
+}
+
+message UpdateNamespaceResponse {
+  Namespace namespace = 1;
+}
+
+message Namespace {
+  NamespaceId id = 1;
+  string description = 2;
+  int64 created_at = 3;
+  int64 updated_at = 4;
+}
+
+message NamespaceId {
+  uint64 account_id = 1;
+  string namespace_name = 2;
+}
+
+// Locks
+
+message AcquireLockRequest {
+  LockId lock_id = 1;
+  string process_id = 2;
+  bool write_lock = 3;
+  int64 now = 4;
+  int64 expires_at = 5;
+  int64 max_number_of_locks_per_namespace = 6;
+}
+
+message AcquireLockResponse {
+  Lock lock = 1;
+  bool success = 2;
+}
+
+message ReleaseLockRequest {
+  LockId lock_id = 1;
+  string process_id = 2;
+  int64 now = 3;
+}
+
+message ReleaseLockResponse {
+  Lock lock = 1;
+}
+
+message GetLockRequest {
+  LockId lock_id = 1;
+  int64 now = 2;
+}
+
+message GetLockResponse {
+  Lock lock = 1;
+}
+
+message DeleteLockRequest {
+  LockId lock_id = 1;
+  int64 now = 2;
+}
+
+message DeleteLockResponse {}
+
+message Lock {
+  LockId id = 1;
+  LockState state = 2;
+  int64 locked_at = 3;
+  LockHolder write_lock_holder = 4;
+  repeated LockHolder read_lock_holders = 5;
+}
+
+message LockHolder {
+  string process_id = 1;
+  int64 locked_at = 2;
+  int64 expires_at = 3;
+}
+
+enum LockState {
+  UNLOCKED = 0;
+  READ_LOCKED = 1;
+  WRITE_LOCKED = 2;
+}
+
+message LockId {
+  uint64 account_id = 1;
+  string namespace_name = 2;
+  string lock_name = 3;
+}
