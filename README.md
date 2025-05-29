@@ -28,7 +28,12 @@ bottom of files with application cores and inside `monstera/x` package too).
 All core data structures are defined in protobufs in `./corepb/*`. Those structures are exposed from Monstera stubs
 and used by application cores to store data in BadgerDB. `./corepb/cloud.proto` has high level containers for requests
 and responses that are actually passed by Monstera. Monstera does not know anything about implementation of your
-application cores and only passes binary blobs as requests and responses for reads and updates.
+application cores and only passes binary blobs as requests and responses for reads and updates. Message routing to a
+binary from and from a blob is based on `oneof` protobuf structure (see `./adapters.go` and `./stubs.go`).
+
+Take a look at tests (`./accounts_test.go`, `./locks_test.go` and `./namespaces_test.go`). Application cores are 
+easily testable without any mocks, and even very complex business logic can be tested by feeding the correct seqeunce 
+of commands since all application cores are state machines without side effects.
 
 ## Gateway server
 
@@ -62,3 +67,28 @@ The whole application consists of two executables:
   from above.
 * `./cmd/node` - stateful Monstera node with all the data and business logic. This is a runner for 
   `monstera.MonsteraServer` and the place to register all implementations of your application cores.
+
+## Monstera codegen
+
+Monstera codegen is the opinionated part of the framework. I wanted to achieve type-safety and utilize comple-time 
+checks, but wanted to eliminate human mistakes from vast boilerplate code. So I generate all boilerplate code.
+
+`./monstera.yaml` defines all application cores and their operations. `./generator.go` has an annotation for running
+`//go:generate` for Monstera codegen. It produces:
+
+* `./api.go` with interfaces for application cores and stubs
+* `./adapters.go` with adapter to application cores, that turns binary blobs into routable requests
+* `./stubs.go` with service stubs, that turn requests into binary blobs and route them to the correct application core
+
+Monstera codegen relies on several conventions in order to make it work in a type-safe way:
+
+* Methods of application core must have corresponding `*Response` and `*Request` objects in `go_code.corepb_package` 
+  package. For example, `AcquireLock` of `Locks` core must have `AcquireLockRequest` and `AcquireLockResponse` proto 
+  messages in `github.com/evrblk/monstera-example/corepb`.
+* `*Response` and `*Request` objects must be included into `oneof` of corresponding high level containers 
+  `update_request_proto`, `update_response_proto`, etc. For example, `AcquireLockRequest` must be included into 
+  `UpdateRequest`, `AcquireLockResponse` must be included into `UpdateResponse`.
+
+The reason why I do not generate high level containers (in `./corepb/cloud.proto`) is because of protobuf field tags.
+They need to be consistent and never change. That means I would need to assign field tags right in the yaml file. If
+I find an elegant and safe way to do it, I will simplify this codegen part.
