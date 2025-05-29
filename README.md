@@ -70,7 +70,7 @@ multiple application cores (Everblack Bison and Eveblack Moab has such operation
 Here authentication is dumb. An account id is passed in headers and the server picks it up without any actual check. 
 Just for demonstration purposes. In real Everblack Cloud it is implemented as described 
 [here](https://everblack.dev/docs/api/authentication/), and 
-[evrblk/evrblk-go/authn](github.com/evrblk/evrblk-go/authn) package is used internally.
+[evrblk/evrblk-go/authn](https://github.com/evrblk/evrblk-go/authn) package is used internally.
 
 ## Executables
 
