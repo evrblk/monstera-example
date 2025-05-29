@@ -1,0 +1,15 @@
+# Go
+*.so
+*.dylib
+*.test
+*.out
+
+# OS
+.DS_Store
+
+# IDEs
+.idea
+target
+.ijwb
+
+data/

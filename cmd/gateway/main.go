@@ -49,7 +49,10 @@ func main() {
 	// ExampleService client
 	exampleServiceCoreApiClient := monsteraexample.NewExampleServiceCoreApiMonsteraStub(monsteraClient, &monsteraexample.ShardKeyCalculator{})
 
-	grpcServer := grpc.NewServer()
+	authenticationMiddleware := monsteraexample.AuthenticationMiddleware{}
+	grpcServer := grpc.NewServer(
+		grpc.UnaryInterceptor(authenticationMiddleware.Unary),
+	)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	c := make(chan os.Signal, 1)

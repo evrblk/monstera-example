@@ -67,6 +67,11 @@ This example is relatively simple and all operations from gateway API map 1-to-1
 authentication). However, in more complex applications a single gateway operation can collect or update data in 
 multiple application cores (Everblack Bison and Eveblack Moab has such operations, for example).
 
+Here authentication is dumb. An account id is passed in headers and the server picks it up without any actual check. 
+Just for demonstration purposes. In real Everblack Cloud it is implemented as described 
+[here](https://everblack.dev/docs/api/authentication/), and 
+[evrblk/evrblk-go/authn](github.com/evrblk/evrblk-go/authn) package is used internally.
+
 ## Executables
 
 The whole application consists of two executables:
@@ -78,6 +83,25 @@ The whole application consists of two executables:
 
 Each Monstera node has 2 BadgerDB stores: one for all application cores, and one for all Raft logs from all shards
 on that node.
+
+`Procfile` has 3 Monstera nodes and 1 gateway server configured. Use goreman to start:
+
+```
+go tool github.com/mattn/goreman start
+```
+
+There are also a bunch of developer tools in `/cmd/dev`:
+
+* `go run ./cmd/dev seed-monstera-cluster` creates initial `cluster_config.pb`. It is used by MonsteraClient. There 
+  is already one in there for you. If you run this command it will regenerate the config with new random ids and you 
+  will also need to update `Procfile` with that new ids.
+* `go run ./cmd/dev seed-accounts` create 100 accounts and print their ids.
+
+`cluster_config.json` is a human-readable version of the cluster config. To re-print it run:
+
+```
+go tool github.com/evrblk/monstera/cmd/monstera cluster print-config --monstera-config=./cluster_config.pb
+```
 
 ## Monstera codegen
 
@@ -108,3 +132,27 @@ I did not like. If I find an elegant and safe way to do it, I will simplify this
 `sharding.go` has an implementation of a shard key calculator. I chose not to use annotations or reflection to extract
 shard keys from requests. Instead, Monstera codegen generates a simple interface where every  method corresponds to 
 a `*Request` object. You specify explicitly how to extract a shard key from each request with one line of Go code.
+
+## How to run
+
+1. Clone this repository.
+
+2. Start a cluster with 3 nodes and a gateway server:
+
+```
+go tool github.com/mattn/goreman start
+```
+
+3. Create 100 accounts:
+
+```
+go run ./cmd/dev seed-accounts
+```
+
+4. Pick any account id from previous step output.
+
+5. Run a test scenario 1 which creates a namespace and tries to grab a lock with the account id:
+
+```
+go run ./cmd/dev scenario-1 --account-id=9fff3bf7d1f9561d
+```

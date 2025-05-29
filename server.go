@@ -8,7 +8,9 @@ import (
 	"github.com/evrblk/monstera-example/corepb"
 	"github.com/evrblk/monstera-example/gatewaypb"
 	monsterax "github.com/evrblk/monstera/x"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
@@ -23,6 +25,8 @@ func (s *ExampleServiceApiServer) Close() {
 }
 
 func (s *ExampleServiceApiServer) CreateNamespace(ctx context.Context, request *gatewaypb.CreateNamespaceRequest) (*gatewaypb.CreateNamespaceResponse, error) {
+	accountId := ctx.Value("account-id").(uint64)
+
 	now := time.Now()
 
 	// Validation
@@ -31,6 +35,7 @@ func (s *ExampleServiceApiServer) CreateNamespace(ctx context.Context, request *
 	}
 
 	res, err := s.coreApiClient.CreateNamespace(ctx, &corepb.CreateNamespaceRequest{
+		AccountId:   accountId,
 		Name:        request.Name,
 		Description: request.Description,
 		Now:         now.UnixNano(),
@@ -47,6 +52,8 @@ func (s *ExampleServiceApiServer) CreateNamespace(ctx context.Context, request *
 }
 
 func (s *ExampleServiceApiServer) GetNamespace(ctx context.Context, request *gatewaypb.GetNamespaceRequest) (*gatewaypb.GetNamespaceResponse, error) {
+	accountId := ctx.Value("account-id").(uint64)
+
 	// Validation
 	if err := validateGetNamespaceRequest(request); err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "%s", err)
@@ -54,6 +61,7 @@ func (s *ExampleServiceApiServer) GetNamespace(ctx context.Context, request *gat
 
 	namespace, err := s.coreApiClient.GetNamespace(ctx, &corepb.GetNamespaceRequest{
 		NamespaceId: &corepb.NamespaceId{
+			AccountId:     accountId,
 			NamespaceName: request.NamespaceName,
 		},
 	})
@@ -67,6 +75,8 @@ func (s *ExampleServiceApiServer) GetNamespace(ctx context.Context, request *gat
 }
 
 func (s *ExampleServiceApiServer) UpdateNamespace(ctx context.Context, request *gatewaypb.UpdateNamespaceRequest) (*gatewaypb.UpdateNamespaceResponse, error) {
+	accountId := ctx.Value("account-id").(uint64)
+
 	now := time.Now()
 
 	// Validation
@@ -76,6 +86,7 @@ func (s *ExampleServiceApiServer) UpdateNamespace(ctx context.Context, request *
 
 	res, err := s.coreApiClient.UpdateNamespace(ctx, &corepb.UpdateNamespaceRequest{
 		NamespaceId: &corepb.NamespaceId{
+			AccountId:     accountId,
 			NamespaceName: request.NamespaceName,
 		},
 		Description: request.Description,
@@ -91,6 +102,8 @@ func (s *ExampleServiceApiServer) UpdateNamespace(ctx context.Context, request *
 }
 
 func (s *ExampleServiceApiServer) DeleteNamespace(ctx context.Context, request *gatewaypb.DeleteNamespaceRequest) (*gatewaypb.DeleteNamespaceResponse, error) {
+	accountId := ctx.Value("account-id").(uint64)
+
 	// Validation
 	if err := validateDeleteNamespaceRequest(request); err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "%s", err)
@@ -98,6 +111,7 @@ func (s *ExampleServiceApiServer) DeleteNamespace(ctx context.Context, request *
 
 	_, err := s.coreApiClient.DeleteNamespace(ctx, &corepb.DeleteNamespaceRequest{
 		NamespaceId: &corepb.NamespaceId{
+			AccountId:     accountId,
 			NamespaceName: request.NamespaceName,
 		},
 	})
@@ -109,12 +123,16 @@ func (s *ExampleServiceApiServer) DeleteNamespace(ctx context.Context, request *
 }
 
 func (s *ExampleServiceApiServer) ListNamespaces(ctx context.Context, request *gatewaypb.ListNamespacesRequest) (*gatewaypb.ListNamespacesResponse, error) {
+	accountId := ctx.Value("account-id").(uint64)
+
 	// Validation
 	if err := validateListNamespacesRequest(request); err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "%s", err)
 	}
 
-	res, err := s.coreApiClient.ListNamespaces(ctx, &corepb.ListNamespacesRequest{})
+	res, err := s.coreApiClient.ListNamespaces(ctx, &corepb.ListNamespacesRequest{
+		AccountId: accountId,
+	})
 	if err != nil {
 		return nil, monsterax.ErrorToGRPC(err)
 	}
@@ -125,6 +143,8 @@ func (s *ExampleServiceApiServer) ListNamespaces(ctx context.Context, request *g
 }
 
 func (s *ExampleServiceApiServer) AcquireLock(ctx context.Context, request *gatewaypb.AcquireLockRequest) (*gatewaypb.AcquireLockResponse, error) {
+	accountId := ctx.Value("account-id").(uint64)
+
 	now := time.Now()
 
 	// Validation
@@ -134,11 +154,14 @@ func (s *ExampleServiceApiServer) AcquireLock(ctx context.Context, request *gate
 
 	res, err := s.coreApiClient.AcquireLock(ctx, &corepb.AcquireLockRequest{
 		LockId: &corepb.LockId{
+			AccountId:     accountId,
 			NamespaceName: request.NamespaceName,
 			LockName:      request.LockName,
 		},
 		Now:       now.UnixNano(),
 		ProcessId: request.ProcessId,
+		ExpiresAt: request.ExpiresAt,
+		WriteLock: request.WriteLock,
 	})
 	if err != nil {
 		return nil, monsterax.ErrorToGRPC(err)
@@ -151,6 +174,8 @@ func (s *ExampleServiceApiServer) AcquireLock(ctx context.Context, request *gate
 }
 
 func (s *ExampleServiceApiServer) ReleaseLock(ctx context.Context, request *gatewaypb.ReleaseLockRequest) (*gatewaypb.ReleaseLockResponse, error) {
+	accountId := ctx.Value("account-id").(uint64)
+
 	now := time.Now()
 
 	// Validation
@@ -160,6 +185,7 @@ func (s *ExampleServiceApiServer) ReleaseLock(ctx context.Context, request *gate
 
 	res, err := s.coreApiClient.ReleaseLock(ctx, &corepb.ReleaseLockRequest{
 		LockId: &corepb.LockId{
+			AccountId:     accountId,
 			NamespaceName: request.NamespaceName,
 			LockName:      request.LockName,
 		},
@@ -176,6 +202,8 @@ func (s *ExampleServiceApiServer) ReleaseLock(ctx context.Context, request *gate
 }
 
 func (s *ExampleServiceApiServer) GetLock(ctx context.Context, request *gatewaypb.GetLockRequest) (*gatewaypb.GetLockResponse, error) {
+	accountId := ctx.Value("account-id").(uint64)
+
 	now := time.Now()
 
 	// Validation
@@ -185,6 +213,7 @@ func (s *ExampleServiceApiServer) GetLock(ctx context.Context, request *gatewayp
 
 	res, err := s.coreApiClient.GetLock(ctx, &corepb.GetLockRequest{
 		LockId: &corepb.LockId{
+			AccountId:     accountId,
 			NamespaceName: request.NamespaceName,
 			LockName:      request.LockName,
 		},
@@ -200,6 +229,8 @@ func (s *ExampleServiceApiServer) GetLock(ctx context.Context, request *gatewayp
 }
 
 func (s *ExampleServiceApiServer) DeleteLock(ctx context.Context, request *gatewaypb.DeleteLockRequest) (*gatewaypb.DeleteLockResponse, error) {
+	accountId := ctx.Value("account-id").(uint64)
+
 	now := time.Now()
 
 	// Validation
@@ -209,6 +240,7 @@ func (s *ExampleServiceApiServer) DeleteLock(ctx context.Context, request *gatew
 
 	_, err := s.coreApiClient.DeleteLock(ctx, &corepb.DeleteLockRequest{
 		LockId: &corepb.LockId{
+			AccountId:     accountId,
 			NamespaceName: request.NamespaceName,
 			LockName:      request.LockName,
 		},
@@ -225,4 +257,32 @@ func NewExampleServiceApiServer(coreApiClient ExampleServiceCoreApi) *ExampleSer
 	return &ExampleServiceApiServer{
 		coreApiClient: coreApiClient,
 	}
+}
+
+type AuthenticationMiddleware struct {
+}
+
+func (m *AuthenticationMiddleware) Unary(
+	ctx context.Context,
+	req interface{},
+	info *grpc.UnaryServerInfo,
+	handler grpc.UnaryHandler,
+) (interface{}, error) {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return nil, status.Errorf(codes.Unauthenticated, "no metadata")
+	}
+
+	if len(md.Get("account-id")) != 1 {
+		return nil, status.Errorf(codes.Unauthenticated, "no account-id in metadata")
+	}
+	accountIdStr := md.Get("account-id")[0]
+	accountId, err := DecodeAccountId(accountIdStr)
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "invalid account-id: %s", err)
+	}
+
+	ctx = context.WithValue(ctx, "account-id", accountId)
+
+	return handler(ctx, req)
 }

@@ -6,6 +6,10 @@ import (
 )
 
 func namespaceToFront(namespace *corepb.Namespace) *gatewaypb.Namespace {
+	if namespace == nil {
+		return nil
+	}
+
 	return &gatewaypb.Namespace{
 		Name:        namespace.Id.NamespaceName,
 		Description: namespace.Description,
@@ -23,6 +27,10 @@ func namespacesToFront(namespaces []*corepb.Namespace) []*gatewaypb.Namespace {
 }
 
 func lockToFront(lock *corepb.Lock) *gatewaypb.Lock {
+	if lock == nil {
+		return nil
+	}
+
 	return &gatewaypb.Lock{
 		Name:            lock.Id.LockName,
 		State:           gatewaypb.LockState(lock.State),
@@ -33,6 +41,10 @@ func lockToFront(lock *corepb.Lock) *gatewaypb.Lock {
 }
 
 func lockHolderToFront(lockHolder *corepb.LockHolder) *gatewaypb.LockHolder {
+	if lockHolder == nil {
+		return nil
+	}
+
 	return &gatewaypb.LockHolder{
 		ProcessId: lockHolder.ProcessId,
 		LockedAt:  lockHolder.LockedAt,
