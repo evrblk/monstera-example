@@ -36,7 +36,7 @@ func (s *ExampleServiceApiServer) CreateNamespace(ctx context.Context, request *
 		Description: request.Description,
 		Now:         now.UnixNano(),
 
-		MaxNumberOfNamespaces: 25,
+		MaxNumberOfNamespaces: 25, // account.MaxNumberOfNamespaces,
 	})
 	if err != nil {
 		return nil, monsterax.ErrorToGRPC(err)
