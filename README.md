@@ -76,9 +76,9 @@ Just for demonstration purposes. In real Everblack Cloud it is implemented as de
 
 The whole application consists of two executables:
 
-* `cmd/gateway/*` - a stateless web server with public API. This is basically a runner for the Gateway gRPC server 
+* `cmd/gateway` - a stateless web server with public API. This is basically a runner for the Gateway gRPC server 
   from above.
-* `cmd/node/*` - stateful Monstera node with all the data and business logic. This is a runner for 
+* `cmd/node` - stateful Monstera node with all the data and business logic. This is a runner for 
   `monstera.MonsteraServer` and the place to register all implementations of your application cores.
 
 Each Monstera node has 2 BadgerDB stores: one for all application cores, and one for all Raft logs from all shards
@@ -93,9 +93,9 @@ go tool github.com/mattn/goreman start
 There are also a bunch of developer tools in `/cmd/dev`:
 
 * `go run ./cmd/dev seed-monstera-cluster` creates initial `cluster_config.pb`. It is used by MonsteraClient. There 
-  is already one in there for you. If you run this command it will regenerate the config with new random ids and you 
+  is already one generated for you. If you run this command it will regenerate the config with new random ids and you 
   will also need to update `Procfile` with that new ids.
-* `go run ./cmd/dev seed-accounts` create 100 accounts and print their ids.
+* `go run ./cmd/dev seed-accounts` create multiple accounts and print their ids.
 * `go run ./cmd/dev scenario-1 --account-id=<ACCOUNT_ID>` runs a test scenario for a given account.
 
 `cluster_config.json` is a human-readable version of the cluster config. To re-print it run:
