@@ -138,21 +138,27 @@ a `*Request` object. You specify explicitly how to extract a shard key from each
 
 1. Clone this repository.
 
-2. Start a cluster with 3 nodes and a gateway server:
+2. Make sure it builds:
+
+```
+go build
+```
+
+3. Start a cluster with 3 nodes and a gateway server:
 
 ```
 go tool github.com/mattn/goreman start
 ```
 
-3. Create 100 accounts:
+4. Create 100 accounts:
 
 ```
 go run ./cmd/dev seed-accounts
 ```
 
-4. Pick any account id from previous step output.
+5. Pick any account id from previous step output.
 
-5. Run a test scenario 1 which creates a namespace and tries to grab a lock with the account id:
+6. Run a test scenario 1 which creates a namespace and tries to grab a lock with the account id:
 
 ```
 go run ./cmd/dev scenario-1 --account-id=9fff3bf7d1f9561d
