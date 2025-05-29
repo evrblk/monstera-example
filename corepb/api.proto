@@ -11,6 +11,7 @@ message CreateAccountRequest {
   string email = 2;
   string full_name = 3;
   int64 now = 4;
+  int64 max_number_of_namespaces = 5;
 }
 
 message CreateAccountResponse {
@@ -53,6 +54,7 @@ message Account {
   string full_name = 3;
   int64 created_at = 4;
   int64 updated_at = 5;
+  int64 max_number_of_namespaces = 6;
 }
 
 // Namespaces

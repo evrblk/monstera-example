@@ -61,11 +61,12 @@ func (c *AccountsCore) CreateAccount(request *corepb.CreateAccountRequest) (*cor
 	}
 
 	account := &corepb.Account{
-		Id:        request.AccountId,
-		Email:     email,
-		FullName:  request.FullName,
-		CreatedAt: request.Now,
-		UpdatedAt: request.Now,
+		Id:                    request.AccountId,
+		Email:                 email,
+		FullName:              request.FullName,
+		CreatedAt:             request.Now,
+		UpdatedAt:             request.Now,
+		MaxNumberOfNamespaces: request.MaxNumberOfNamespaces,
 	}
 
 	err = c.createAccount(txn, account)

@@ -326,11 +326,11 @@ type locksIdIntf interface {
 	GetLockName() string
 }
 
-// 1. shard key (by account id)
+// 1. shard key (by account id and namespace name)
 // 2. account id
 // 3. namespace name
 func locksTablePK(n namespaceIdIntf) []byte {
-	return monstera.ConcatBytes(shardByAccount(n.GetAccountId()), n.GetAccountId(), n.GetNamespaceName())
+	return monstera.ConcatBytes(shardByAccountAndNamespace(n.GetAccountId(), n.GetNamespaceName()), n.GetAccountId(), n.GetNamespaceName())
 }
 
 // 1. lock name

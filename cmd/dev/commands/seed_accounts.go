@@ -44,10 +44,11 @@ var seedAccountsCmd = &cobra.Command{
 
 			// Create account
 			_, err := exampleServiceCoreApiClient.CreateAccount(context.Background(), &corepb.CreateAccountRequest{
-				AccountId: accountId,
-				FullName:  "Doogie Howser",
-				Email:     email,
-				Now:       now.UnixNano(),
+				AccountId:             accountId,
+				FullName:              "Doogie Howser",
+				Email:                 email,
+				Now:                   now.UnixNano(),
+				MaxNumberOfNamespaces: 25,
 			})
 			if err != nil {
 				log.Fatalf("could not create account: %v", err)

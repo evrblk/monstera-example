@@ -27,6 +27,14 @@ func (s *ExampleServiceApiServer) Close() {
 func (s *ExampleServiceApiServer) CreateNamespace(ctx context.Context, request *gatewaypb.CreateNamespaceRequest) (*gatewaypb.CreateNamespaceResponse, error) {
 	accountId := ctx.Value("account-id").(uint64)
 
+	res1, err := s.coreApiClient.GetAccount(ctx, &corepb.GetAccountRequest{
+		AccountId: accountId,
+	})
+	if err != nil {
+		return nil, monsterax.ErrorToGRPC(err)
+	}
+	account := res1.Account
+
 	now := time.Now()
 
 	// Validation
@@ -34,20 +42,19 @@ func (s *ExampleServiceApiServer) CreateNamespace(ctx context.Context, request *
 		return nil, status.Errorf(codes.InvalidArgument, "%s", err)
 	}
 
-	res, err := s.coreApiClient.CreateNamespace(ctx, &corepb.CreateNamespaceRequest{
-		AccountId:   accountId,
-		Name:        request.Name,
-		Description: request.Description,
-		Now:         now.UnixNano(),
-
-		MaxNumberOfNamespaces: 25, // account.MaxNumberOfNamespaces,
+	res2, err := s.coreApiClient.CreateNamespace(ctx, &corepb.CreateNamespaceRequest{
+		AccountId:             accountId,
+		Name:                  request.Name,
+		Description:           request.Description,
+		Now:                   now.UnixNano(),
+		MaxNumberOfNamespaces: account.MaxNumberOfNamespaces,
 	})
 	if err != nil {
 		return nil, monsterax.ErrorToGRPC(err)
 	}
 
 	return &gatewaypb.CreateNamespaceResponse{
-		Namespace: namespaceToFront(res.Namespace),
+		Namespace: namespaceToFront(res2.Namespace),
 	}, nil
 }
 
