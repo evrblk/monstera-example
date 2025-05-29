@@ -72,7 +72,10 @@ multiple application cores (Everblack Bison and Eveblack Moab has such operation
 The whole application consists of two executables:
 
 * `cmd/gateway/*` - a stateless web server with public API. This is basically a runner for the Gateway gRPC server 
-  from above.that you have to implement, 
+  from above.
+* `cmd/node/*` - stateful Monstera node with all the data and business logic. This is a runner for 
+  `monstera.MonsteraServer` and the place to register all implementations of your application cores.
+
 Each Monstera node has 2 BadgerDB stores: one for all application cores, and one for all Raft logs from all shards
 on that node.
 
