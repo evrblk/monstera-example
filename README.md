@@ -96,6 +96,7 @@ There are also a bunch of developer tools in `/cmd/dev`:
   is already one in there for you. If you run this command it will regenerate the config with new random ids and you 
   will also need to update `Procfile` with that new ids.
 * `go run ./cmd/dev seed-accounts` create 100 accounts and print their ids.
+* `go run ./cmd/dev scenario-1 --account-id=<ACCOUNT_ID>` runs a test scenario for a given account.
 
 `cluster_config.json` is a human-readable version of the cluster config. To re-print it run:
 
