@@ -151,8 +151,6 @@ func (c *NamespacesCore) DeleteNamespace(request *corepb.DeleteNamespaceRequest)
 	err = c.deleteNamespace(txn, namespace)
 	panicIfNotNil(err)
 
-	// TODO delete locks, semaphores, wgs
-
 	err = txn.Commit()
 	panicIfNotNil(err)
 

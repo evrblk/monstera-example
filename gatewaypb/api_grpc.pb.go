@@ -19,22 +19,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ExampleServiceApi_CreateNamespace_FullMethodName  = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/CreateNamespace"
-	ExampleServiceApi_ListNamespaces_FullMethodName   = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/ListNamespaces"
-	ExampleServiceApi_GetNamespace_FullMethodName     = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/GetNamespace"
-	ExampleServiceApi_DeleteNamespace_FullMethodName  = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/DeleteNamespace"
-	ExampleServiceApi_UpdateNamespace_FullMethodName  = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/UpdateNamespace"
-	ExampleServiceApi_CreateSemaphore_FullMethodName  = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/CreateSemaphore"
-	ExampleServiceApi_ListSemaphores_FullMethodName   = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/ListSemaphores"
-	ExampleServiceApi_GetSemaphore_FullMethodName     = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/GetSemaphore"
-	ExampleServiceApi_AcquireSemaphore_FullMethodName = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/AcquireSemaphore"
-	ExampleServiceApi_ReleaseSemaphore_FullMethodName = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/ReleaseSemaphore"
-	ExampleServiceApi_UpdateSemaphore_FullMethodName  = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/UpdateSemaphore"
-	ExampleServiceApi_DeleteSemaphore_FullMethodName  = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/DeleteSemaphore"
-	ExampleServiceApi_AcquireLock_FullMethodName      = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/AcquireLock"
-	ExampleServiceApi_ReleaseLock_FullMethodName      = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/ReleaseLock"
-	ExampleServiceApi_GetLock_FullMethodName          = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/GetLock"
-	ExampleServiceApi_DeleteLock_FullMethodName       = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/DeleteLock"
+	ExampleServiceApi_CreateNamespace_FullMethodName = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/CreateNamespace"
+	ExampleServiceApi_ListNamespaces_FullMethodName  = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/ListNamespaces"
+	ExampleServiceApi_GetNamespace_FullMethodName    = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/GetNamespace"
+	ExampleServiceApi_DeleteNamespace_FullMethodName = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/DeleteNamespace"
+	ExampleServiceApi_UpdateNamespace_FullMethodName = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/UpdateNamespace"
+	ExampleServiceApi_AcquireLock_FullMethodName     = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/AcquireLock"
+	ExampleServiceApi_ReleaseLock_FullMethodName     = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/ReleaseLock"
+	ExampleServiceApi_GetLock_FullMethodName         = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/GetLock"
+	ExampleServiceApi_DeleteLock_FullMethodName      = "/com.evrblk.monstera_example.gatewaypb.ExampleServiceApi/DeleteLock"
 )
 
 // ExampleServiceApiClient is the client API for ExampleServiceApi service.
@@ -46,13 +39,6 @@ type ExampleServiceApiClient interface {
 	GetNamespace(ctx context.Context, in *GetNamespaceRequest, opts ...grpc.CallOption) (*GetNamespaceResponse, error)
 	DeleteNamespace(ctx context.Context, in *DeleteNamespaceRequest, opts ...grpc.CallOption) (*DeleteNamespaceResponse, error)
 	UpdateNamespace(ctx context.Context, in *UpdateNamespaceRequest, opts ...grpc.CallOption) (*UpdateNamespaceResponse, error)
-	CreateSemaphore(ctx context.Context, in *CreateSemaphoreRequest, opts ...grpc.CallOption) (*CreateSemaphoreResponse, error)
-	ListSemaphores(ctx context.Context, in *ListSemaphoresRequest, opts ...grpc.CallOption) (*ListSemaphoresResponse, error)
-	GetSemaphore(ctx context.Context, in *GetSemaphoreRequest, opts ...grpc.CallOption) (*GetSemaphoreResponse, error)
-	AcquireSemaphore(ctx context.Context, in *AcquireSemaphoreRequest, opts ...grpc.CallOption) (*AcquireSemaphoreResponse, error)
-	ReleaseSemaphore(ctx context.Context, in *ReleaseSemaphoreRequest, opts ...grpc.CallOption) (*ReleaseSemaphoreResponse, error)
-	UpdateSemaphore(ctx context.Context, in *UpdateSemaphoreRequest, opts ...grpc.CallOption) (*UpdateSemaphoreResponse, error)
-	DeleteSemaphore(ctx context.Context, in *DeleteSemaphoreRequest, opts ...grpc.CallOption) (*DeleteSemaphoreResponse, error)
 	AcquireLock(ctx context.Context, in *AcquireLockRequest, opts ...grpc.CallOption) (*AcquireLockResponse, error)
 	ReleaseLock(ctx context.Context, in *ReleaseLockRequest, opts ...grpc.CallOption) (*ReleaseLockResponse, error)
 	GetLock(ctx context.Context, in *GetLockRequest, opts ...grpc.CallOption) (*GetLockResponse, error)
@@ -117,76 +103,6 @@ func (c *exampleServiceApiClient) UpdateNamespace(ctx context.Context, in *Updat
 	return out, nil
 }
 
-func (c *exampleServiceApiClient) CreateSemaphore(ctx context.Context, in *CreateSemaphoreRequest, opts ...grpc.CallOption) (*CreateSemaphoreResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateSemaphoreResponse)
-	err := c.cc.Invoke(ctx, ExampleServiceApi_CreateSemaphore_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *exampleServiceApiClient) ListSemaphores(ctx context.Context, in *ListSemaphoresRequest, opts ...grpc.CallOption) (*ListSemaphoresResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListSemaphoresResponse)
-	err := c.cc.Invoke(ctx, ExampleServiceApi_ListSemaphores_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *exampleServiceApiClient) GetSemaphore(ctx context.Context, in *GetSemaphoreRequest, opts ...grpc.CallOption) (*GetSemaphoreResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetSemaphoreResponse)
-	err := c.cc.Invoke(ctx, ExampleServiceApi_GetSemaphore_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *exampleServiceApiClient) AcquireSemaphore(ctx context.Context, in *AcquireSemaphoreRequest, opts ...grpc.CallOption) (*AcquireSemaphoreResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AcquireSemaphoreResponse)
-	err := c.cc.Invoke(ctx, ExampleServiceApi_AcquireSemaphore_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *exampleServiceApiClient) ReleaseSemaphore(ctx context.Context, in *ReleaseSemaphoreRequest, opts ...grpc.CallOption) (*ReleaseSemaphoreResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ReleaseSemaphoreResponse)
-	err := c.cc.Invoke(ctx, ExampleServiceApi_ReleaseSemaphore_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *exampleServiceApiClient) UpdateSemaphore(ctx context.Context, in *UpdateSemaphoreRequest, opts ...grpc.CallOption) (*UpdateSemaphoreResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateSemaphoreResponse)
-	err := c.cc.Invoke(ctx, ExampleServiceApi_UpdateSemaphore_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *exampleServiceApiClient) DeleteSemaphore(ctx context.Context, in *DeleteSemaphoreRequest, opts ...grpc.CallOption) (*DeleteSemaphoreResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeleteSemaphoreResponse)
-	err := c.cc.Invoke(ctx, ExampleServiceApi_DeleteSemaphore_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *exampleServiceApiClient) AcquireLock(ctx context.Context, in *AcquireLockRequest, opts ...grpc.CallOption) (*AcquireLockResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AcquireLockResponse)
@@ -236,13 +152,6 @@ type ExampleServiceApiServer interface {
 	GetNamespace(context.Context, *GetNamespaceRequest) (*GetNamespaceResponse, error)
 	DeleteNamespace(context.Context, *DeleteNamespaceRequest) (*DeleteNamespaceResponse, error)
 	UpdateNamespace(context.Context, *UpdateNamespaceRequest) (*UpdateNamespaceResponse, error)
-	CreateSemaphore(context.Context, *CreateSemaphoreRequest) (*CreateSemaphoreResponse, error)
-	ListSemaphores(context.Context, *ListSemaphoresRequest) (*ListSemaphoresResponse, error)
-	GetSemaphore(context.Context, *GetSemaphoreRequest) (*GetSemaphoreResponse, error)
-	AcquireSemaphore(context.Context, *AcquireSemaphoreRequest) (*AcquireSemaphoreResponse, error)
-	ReleaseSemaphore(context.Context, *ReleaseSemaphoreRequest) (*ReleaseSemaphoreResponse, error)
-	UpdateSemaphore(context.Context, *UpdateSemaphoreRequest) (*UpdateSemaphoreResponse, error)
-	DeleteSemaphore(context.Context, *DeleteSemaphoreRequest) (*DeleteSemaphoreResponse, error)
 	AcquireLock(context.Context, *AcquireLockRequest) (*AcquireLockResponse, error)
 	ReleaseLock(context.Context, *ReleaseLockRequest) (*ReleaseLockResponse, error)
 	GetLock(context.Context, *GetLockRequest) (*GetLockResponse, error)
@@ -271,27 +180,6 @@ func (UnimplementedExampleServiceApiServer) DeleteNamespace(context.Context, *De
 }
 func (UnimplementedExampleServiceApiServer) UpdateNamespace(context.Context, *UpdateNamespaceRequest) (*UpdateNamespaceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateNamespace not implemented")
-}
-func (UnimplementedExampleServiceApiServer) CreateSemaphore(context.Context, *CreateSemaphoreRequest) (*CreateSemaphoreResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateSemaphore not implemented")
-}
-func (UnimplementedExampleServiceApiServer) ListSemaphores(context.Context, *ListSemaphoresRequest) (*ListSemaphoresResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListSemaphores not implemented")
-}
-func (UnimplementedExampleServiceApiServer) GetSemaphore(context.Context, *GetSemaphoreRequest) (*GetSemaphoreResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetSemaphore not implemented")
-}
-func (UnimplementedExampleServiceApiServer) AcquireSemaphore(context.Context, *AcquireSemaphoreRequest) (*AcquireSemaphoreResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AcquireSemaphore not implemented")
-}
-func (UnimplementedExampleServiceApiServer) ReleaseSemaphore(context.Context, *ReleaseSemaphoreRequest) (*ReleaseSemaphoreResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ReleaseSemaphore not implemented")
-}
-func (UnimplementedExampleServiceApiServer) UpdateSemaphore(context.Context, *UpdateSemaphoreRequest) (*UpdateSemaphoreResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateSemaphore not implemented")
-}
-func (UnimplementedExampleServiceApiServer) DeleteSemaphore(context.Context, *DeleteSemaphoreRequest) (*DeleteSemaphoreResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteSemaphore not implemented")
 }
 func (UnimplementedExampleServiceApiServer) AcquireLock(context.Context, *AcquireLockRequest) (*AcquireLockResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AcquireLock not implemented")
@@ -416,132 +304,6 @@ func _ExampleServiceApi_UpdateNamespace_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExampleServiceApi_CreateSemaphore_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateSemaphoreRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ExampleServiceApiServer).CreateSemaphore(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ExampleServiceApi_CreateSemaphore_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExampleServiceApiServer).CreateSemaphore(ctx, req.(*CreateSemaphoreRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ExampleServiceApi_ListSemaphores_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListSemaphoresRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ExampleServiceApiServer).ListSemaphores(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ExampleServiceApi_ListSemaphores_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExampleServiceApiServer).ListSemaphores(ctx, req.(*ListSemaphoresRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ExampleServiceApi_GetSemaphore_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetSemaphoreRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ExampleServiceApiServer).GetSemaphore(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ExampleServiceApi_GetSemaphore_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExampleServiceApiServer).GetSemaphore(ctx, req.(*GetSemaphoreRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ExampleServiceApi_AcquireSemaphore_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AcquireSemaphoreRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ExampleServiceApiServer).AcquireSemaphore(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ExampleServiceApi_AcquireSemaphore_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExampleServiceApiServer).AcquireSemaphore(ctx, req.(*AcquireSemaphoreRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ExampleServiceApi_ReleaseSemaphore_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ReleaseSemaphoreRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ExampleServiceApiServer).ReleaseSemaphore(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ExampleServiceApi_ReleaseSemaphore_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExampleServiceApiServer).ReleaseSemaphore(ctx, req.(*ReleaseSemaphoreRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ExampleServiceApi_UpdateSemaphore_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateSemaphoreRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ExampleServiceApiServer).UpdateSemaphore(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ExampleServiceApi_UpdateSemaphore_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExampleServiceApiServer).UpdateSemaphore(ctx, req.(*UpdateSemaphoreRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ExampleServiceApi_DeleteSemaphore_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteSemaphoreRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ExampleServiceApiServer).DeleteSemaphore(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ExampleServiceApi_DeleteSemaphore_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExampleServiceApiServer).DeleteSemaphore(ctx, req.(*DeleteSemaphoreRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _ExampleServiceApi_AcquireLock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AcquireLockRequest)
 	if err := dec(in); err != nil {
@@ -640,34 +402,6 @@ var ExampleServiceApi_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateNamespace",
 			Handler:    _ExampleServiceApi_UpdateNamespace_Handler,
-		},
-		{
-			MethodName: "CreateSemaphore",
-			Handler:    _ExampleServiceApi_CreateSemaphore_Handler,
-		},
-		{
-			MethodName: "ListSemaphores",
-			Handler:    _ExampleServiceApi_ListSemaphores_Handler,
-		},
-		{
-			MethodName: "GetSemaphore",
-			Handler:    _ExampleServiceApi_GetSemaphore_Handler,
-		},
-		{
-			MethodName: "AcquireSemaphore",
-			Handler:    _ExampleServiceApi_AcquireSemaphore_Handler,
-		},
-		{
-			MethodName: "ReleaseSemaphore",
-			Handler:    _ExampleServiceApi_ReleaseSemaphore_Handler,
-		},
-		{
-			MethodName: "UpdateSemaphore",
-			Handler:    _ExampleServiceApi_UpdateSemaphore_Handler,
-		},
-		{
-			MethodName: "DeleteSemaphore",
-			Handler:    _ExampleServiceApi_DeleteSemaphore_Handler,
 		},
 		{
 			MethodName: "AcquireLock",
