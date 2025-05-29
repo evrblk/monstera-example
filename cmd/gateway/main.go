@@ -13,7 +13,6 @@ import (
 	"github.com/evrblk/monstera"
 	"github.com/evrblk/monstera-example"
 	"github.com/evrblk/monstera-example/gatewaypb"
-	"github.com/evrblk/monstera-example/server"
 	"google.golang.org/grpc"
 )
 
@@ -71,7 +70,7 @@ func main() {
 	}()
 
 	// Create and register Gateway server
-	exampleServiceApiGatewayServer := server.NewExampleServiceApiServer(exampleServiceCoreApiClient)
+	exampleServiceApiGatewayServer := monsteraexample.NewExampleServiceApiServer(exampleServiceCoreApiClient)
 	defer exampleServiceApiGatewayServer.Close()
 	gatewaypb.RegisterExampleServiceApiServer(grpcServer, exampleServiceApiGatewayServer)
 

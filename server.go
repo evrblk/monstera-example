@@ -1,11 +1,10 @@
-package server
+package monsteraexample
 
 import (
 	"context"
 	"log"
 	"time"
 
-	monsteraexample "github.com/evrblk/monstera-example"
 	"github.com/evrblk/monstera-example/corepb"
 	"github.com/evrblk/monstera-example/gatewaypb"
 	monsterax "github.com/evrblk/monstera/x"
@@ -16,7 +15,7 @@ import (
 type ExampleServiceApiServer struct {
 	gatewaypb.UnimplementedExampleServiceApiServer
 
-	coreApiClient monsteraexample.ExampleServiceCoreApi
+	coreApiClient ExampleServiceCoreApi
 }
 
 func (s *ExampleServiceApiServer) Close() {
@@ -222,7 +221,7 @@ func (s *ExampleServiceApiServer) DeleteLock(ctx context.Context, request *gatew
 	return &gatewaypb.DeleteLockResponse{}, nil
 }
 
-func NewExampleServiceApiServer(coreApiClient monsteraexample.ExampleServiceCoreApi) *ExampleServiceApiServer {
+func NewExampleServiceApiServer(coreApiClient ExampleServiceCoreApi) *ExampleServiceApiServer {
 	return &ExampleServiceApiServer{
 		coreApiClient: coreApiClient,
 	}

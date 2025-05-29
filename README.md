@@ -1,9 +1,15 @@
 # Monstera Example
 
 An example of how to build applications with Monstera framework. This is an imaginary multi-tenant SaaS for 
-distributed RW locks. Locks are referenced by a user-specified name and are organized into namespaces. Names for locks
-are unique within a namespace, but not between namespaces. Basically, this is a simplified version of Everblack Grackle
-service, with locks only, trivial account management, and no authentication. 
+distributed RW locks. Basically, this is a simplified version of Everblack Grackle service, with locks only, 
+trivial account management, and no authentication. 
+
+Here is a bare minimum of docs you have to read before jumping into this codebase:
+
+* https://everblack.dev/docs/monstera/overview/
+* https://everblack.dev/docs/monstera/units-of-work/
+* https://everblack.dev/docs/grackle/concepts/
+* https://everblack.dev/docs/grackle/locks/
 
 Monstera framework does not force any particular application core implementation, method routing mechanism, or any 
 specific wire format. It is up to you to define that. However, over time I developed a certain style of how all
@@ -16,33 +22,35 @@ all of them can be assembled together.
 
 There are 3 application cores:
 
-* `AccountsCore` in `./accounts.go`
-* `NamespacesCore` in `./namespaces.go`
-* `LocksCore` in `./locks.go`
+* `AccountsCore` in `accounts.go`
+* `NamespacesCore` in `namespaces.go`
+* `LocksCore` in `locks.go`
+
+All these cores are implemented in my opinionated way and serve as an example of how it can be done. You are free to
+do it any way you want, with different in-memory data structures or other embedded databases.
 
 Application cores store data in BadgerDB. There is one instance of BadgeDB per process, so multiple shards and multiple
-cores share it. To avoid conflicts, each table is prefixed with table IDs (in `./tables.go`). Each shard has its own 
+cores share it. To avoid conflicts, each table is prefixed with table IDs (in `tables.go`). Each shard has its own 
 boundaries (`lowerBound` and `upperBound`). Take a look how keys are built for tables and indexes (typically in the
 bottom of files with application cores and inside `monstera/x` package too).
 
-All core data structures are defined in protobufs in `./corepb/*`. Those structures are exposed from Monstera stubs
-and used by application cores to store data in BadgerDB. `./corepb/cloud.proto` has high level containers for requests
+All core data structures are defined in protobufs in `corepb/*`. Those structures are exposed from Monstera stubs
+and used by application cores to store data in BadgerDB. `corepb/cloud.proto` has high level containers for requests
 and responses that are actually passed by Monstera. Monstera does not know anything about implementation of your
 application cores and only passes binary blobs as requests and responses for reads and updates. Message routing to a
-binary from and from a blob is based on `oneof` protobuf structure (see `./adapters.go` and `./stubs.go`).
+binary blob and from a blob is based on `oneof` protobuf structure (see `adapters.go` and `stubs.go`).
 
-Take a look at tests (`./accounts_test.go`, `./locks_test.go` and `./namespaces_test.go`). Application cores are 
+Take a look at tests (`accounts_test.go`, `locks_test.go` and `namespaces_test.go`). Application cores are 
 easily testable without any mocks, and even very complex business logic can be tested by feeding the correct seqeunce 
 of commands since all application cores are state machines without side effects.
 
 ## Gateway server
 
 A gateway (or frontend) server is the public API part of the system. In this example it serves gRPC, but it can be
-anything you want (OpenAPI, ConnectRPC, gRPC, Gin, etc). Gateway gRPC is defined in `./gatewaypb/`. Protos are not
+anything you want (OpenAPI, ConnectRPC, gRPC, Gin, etc). Gateway gRPC is defined in `gatewaypb/*`. Protos are not
 shared between gateway and core parts for clean separation of core business layer and presentation layer. The code for
-converting between them lives in `./server/pbconv.go`. `./server/server.go` is the implementation of the gateway API.
-It is the entry point for all user actions, and if you want to trace and understand the lifecycle of a request then 
-start from here.
+converting between them lives in `pbconv.go`. `server.go` is the implementation of the gateway API. It is the entry 
+point for all user actions, and if you want to trace and understand the lifecycle of a request then start from here.
 
 Gateway server is the place to do:
 
@@ -63,22 +71,23 @@ multiple application cores (Everblack Bison and Eveblack Moab has such operation
 
 The whole application consists of two executables:
 
-* `./cmd/gateway` - a stateless web server with public API. This is basically a runner for the Gateway gRPC server 
-  from above.
-* `./cmd/node` - stateful Monstera node with all the data and business logic. This is a runner for 
-  `monstera.MonsteraServer` and the place to register all implementations of your application cores.
+* `cmd/gateway/*` - a stateless web server with public API. This is basically a runner for the Gateway gRPC server 
+  from above.that you have to implement, 
+Each Monstera node has 2 BadgerDB stores: one for all application cores, and one for all Raft logs from all shards
+on that node.
 
 ## Monstera codegen
 
 Monstera codegen is the opinionated part of the framework. I wanted to achieve type-safety and utilize comple-time 
-checks, but wanted to eliminate human mistakes from vast boilerplate code. So I generate all boilerplate code.
+checks without reflection, but wanted to eliminate human mistakes from vast boilerplate code. So I generate all 
+boilerplate code.
 
-`./monstera.yaml` defines all application cores and their operations. `./generator.go` has an annotation for running
+`monstera.yaml` defines all application cores and their operations. `generator.go` has an annotation for running
 `//go:generate` for Monstera codegen. It produces:
 
-* `./api.go` with interfaces for application cores and stubs
-* `./adapters.go` with adapter to application cores, that turns binary blobs into routable requests
-* `./stubs.go` with service stubs, that turn requests into binary blobs and route them to the correct application core
+* `api.go` with interfaces for application cores and stubs
+* `adapters.go` with adapter to application cores, that turns binary blobs into routable requests
+* `stubs.go` with service stubs, that turn requests into binary blobs and route them to the correct application core
 
 Monstera codegen relies on several conventions in order to make it work in a type-safe way:
 
@@ -89,6 +98,10 @@ Monstera codegen relies on several conventions in order to make it work in a typ
   `update_request_proto`, `update_response_proto`, etc. For example, `AcquireLockRequest` must be included into 
   `UpdateRequest`, `AcquireLockResponse` must be included into `UpdateResponse`.
 
-The reason why I do not generate high level containers (in `./corepb/cloud.proto`) is because of protobuf field tags.
-They need to be consistent and never change. That means I would need to assign field tags right in the yaml file. If
-I find an elegant and safe way to do it, I will simplify this codegen part.
+The reason why I do not generate high level containers (in `corepb/cloud.proto`) is because of protobuf field tags.
+They need to be consistent and never change. That means I would need to assign field tags right in the yaml file, which
+I did not like. If I find an elegant and safe way to do it, I will simplify this codegen part.
+
+`sharding.go` has an implementation of a shard key calculator. I chose not to use annotations or reflection to extract
+shard keys from requests. Instead, Monstera codegen generates a simple interface where every  method corresponds to 
+a `*Request` object. You specify explicitly how to extract a shard key from each request with one line of Go code.
