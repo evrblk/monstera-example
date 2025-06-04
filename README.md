@@ -1,5 +1,7 @@
 # Monstera Example
 
+[![Go](https://github.com/evrblk/monstera-example/actions/workflows/go.yml/badge.svg)](https://github.com/evrblk/monstera-example/actions/workflows/go.yml)
+
 An example of how to build applications with Monstera framework. This is an imaginary multi-tenant SaaS for 
 distributed RW locks. Basically, this is a simplified version of Everblack Grackle service, with locks only, 
 trivial account management, and no authentication. 
@@ -92,17 +94,9 @@ go tool github.com/mattn/goreman start
 
 There are also a bunch of developer tools in `/cmd/dev`:
 
-* `go run ./cmd/dev seed-monstera-cluster` creates initial `cluster_config.pb`. It is used by MonsteraClient. There 
-  is already one generated for you. If you run this command it will regenerate the config with new random ids and you 
-  will also need to update `Procfile` with that new ids.
 * `go run ./cmd/dev seed-accounts` create multiple accounts and print their ids.
 * `go run ./cmd/dev scenario-1 --account-id=<ACCOUNT_ID>` runs a test scenario for a given account.
 
-`cluster_config.json` is a human-readable version of the cluster config. To re-print it run:
-
-```
-go tool github.com/evrblk/monstera/cmd/monstera cluster print-config --monstera-config=./cluster_config.pb
-```
 
 ## Monstera codegen
 
@@ -133,6 +127,32 @@ I did not like. If I find an elegant and safe way to do it, I will simplify this
 `sharding.go` has an implementation of a shard key calculator. I chose not to use annotations or reflection to extract
 shard keys from requests. Instead, Monstera codegen generates a simple interface where every  method corresponds to 
 a `*Request` object. You specify explicitly how to extract a shard key from each request with one line of Go code.
+
+## Cluster config
+
+Cluster config is used by MonsteraClient. There is already one generated for you in `cluster_config.pb`. 
+`cluster_config.json` is a human-readable version of the same config, check it out.
+
+Current cluster config has:
+
+* 3 nodes
+* 16 shards of `Namespaces`
+* 16 shards of `Locks`
+* 1 shard of `Accounts`
+* 3 replicas of each
+
+To print a json version of any config run:
+
+```
+go tool github.com/evrblk/monstera/cmd/monstera cluster print-config --monstera-config=./cluster_config.pb
+```
+
+You can seed a new config. Keep in mind, if you run this command it will regenerate the config with new random ids and 
+you  will also need to update `Procfile` with that new ids:
+
+```
+go run ./cmd/dev seed-monstera-cluster
+```
 
 ## How to run
 
