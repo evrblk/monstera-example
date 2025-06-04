@@ -92,12 +92,6 @@ on that node.
 go tool github.com/mattn/goreman start
 ```
 
-There are also a bunch of developer tools in `/cmd/dev`:
-
-* `go run ./cmd/dev seed-accounts` create multiple accounts and print their ids.
-* `go run ./cmd/dev scenario-1 --account-id=<ACCOUNT_ID>` runs a test scenario for a given account.
-
-
 ## Monstera codegen
 
 Monstera codegen is the opinionated part of the framework. I wanted to achieve type-safety and utilize comple-time 
