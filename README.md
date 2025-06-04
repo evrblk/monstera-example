@@ -6,7 +6,7 @@ An example of how to build applications with Monstera framework. This is an imag
 distributed RW locks. Basically, this is a simplified version of Everblack Grackle service, with locks only, 
 trivial account management, and no authentication. 
 
-Here is a bare minimum of docs you have to read before jumping into this codebase:
+__Here is a bare minimum of docs you must read before jumping into this codebase:__
 
 * https://everblack.dev/docs/monstera/overview/
 * https://everblack.dev/docs/monstera/units-of-work/
