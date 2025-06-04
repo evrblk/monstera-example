@@ -31,7 +31,7 @@ There are 3 application cores:
 All these cores are implemented in my opinionated way and serve as an example of how it can be done. You are free to
 do it any way you want, with different in-memory data structures or other embedded databases.
 
-Application cores store data in BadgerDB. There is one instance of BadgeDB per process, so multiple shards and multiple
+Application cores store data in BadgerDB. There is one instance of BadgerDB per process, so multiple shards and multiple
 cores share it. To avoid conflicts, each table is prefixed with table IDs (in `tables.go`). Each shard has its own 
 boundaries (`lowerBound` and `upperBound`). Take a look how keys are built for tables and indexes (typically in the
 bottom of files with application cores and inside `monstera/x` package too).
@@ -155,7 +155,7 @@ go run ./cmd/dev seed-monstera-cluster
 2. Make sure it builds:
 
 ```
-go build
+go build -v ./...
 ```
 
 3. Start a cluster with 3 nodes and a gateway server:
