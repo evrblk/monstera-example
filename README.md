@@ -2,9 +2,9 @@
 
 [![Go](https://github.com/evrblk/monstera-example/actions/workflows/go.yml/badge.svg)](https://github.com/evrblk/monstera-example/actions/workflows/go.yml)
 
-An example of how to build applications with Monstera framework. This is an imaginary multi-tenant SaaS for 
-distributed RW locks. Basically, this is a simplified version of Everblack Grackle service, with locks only, 
-trivial account management, and no authentication. 
+An example of how to build applications with [Monstera framework](https://github.com/evrblk/monstera). This is an 
+imaginary multi-tenant SaaS for distributed RW locks. Basically, this is a simplified version of Everblack Grackle 
+service, with locks only, trivial account management, and no authentication. 
 
 __Here is a bare minimum of docs you must read before jumping into this codebase:__
 
