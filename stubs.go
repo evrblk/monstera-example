@@ -48,7 +48,7 @@ func (s *ExampleServiceCoreApiMonsteraStub) ListAccounts(ctx context.Context, re
 
 	response, ok := readResponse.Response.(*corepb.ReadResponse_ListAccountsResponse)
 	if ok {
-		return response.ListAccountsResponse, nil
+		return response.ListAccountsResponse, readResponse.Error
 	} else {
 		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "invalid response type", map[string]string{"response": readResponse.String()})
 	}
@@ -66,7 +66,7 @@ func (s *ExampleServiceCoreApiMonsteraStub) GetAccount(ctx context.Context, requ
 
 	response, ok := readResponse.Response.(*corepb.ReadResponse_GetAccountResponse)
 	if ok {
-		return response.GetAccountResponse, nil
+		return response.GetAccountResponse, readResponse.Error
 	} else {
 		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "invalid response type", map[string]string{"response": readResponse.String()})
 	}
@@ -84,7 +84,7 @@ func (s *ExampleServiceCoreApiMonsteraStub) CreateAccount(ctx context.Context, r
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_CreateAccountResponse)
 	if ok {
-		return response.CreateAccountResponse, nil
+		return response.CreateAccountResponse, updateResponse.Error
 	} else {
 		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "invalid response type", map[string]string{"response": updateResponse.String()})
 	}
@@ -102,7 +102,7 @@ func (s *ExampleServiceCoreApiMonsteraStub) UpdateAccount(ctx context.Context, r
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_UpdateAccountResponse)
 	if ok {
-		return response.UpdateAccountResponse, nil
+		return response.UpdateAccountResponse, updateResponse.Error
 	} else {
 		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "invalid response type", map[string]string{"response": updateResponse.String()})
 	}
@@ -120,7 +120,7 @@ func (s *ExampleServiceCoreApiMonsteraStub) DeleteAccount(ctx context.Context, r
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_DeleteAccountResponse)
 	if ok {
-		return response.DeleteAccountResponse, nil
+		return response.DeleteAccountResponse, updateResponse.Error
 	} else {
 		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "invalid response type", map[string]string{"response": updateResponse.String()})
 	}
@@ -138,7 +138,7 @@ func (s *ExampleServiceCoreApiMonsteraStub) GetNamespace(ctx context.Context, re
 
 	response, ok := readResponse.Response.(*corepb.ReadResponse_GetNamespaceResponse)
 	if ok {
-		return response.GetNamespaceResponse, nil
+		return response.GetNamespaceResponse, readResponse.Error
 	} else {
 		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "invalid response type", map[string]string{"response": readResponse.String()})
 	}
@@ -156,7 +156,7 @@ func (s *ExampleServiceCoreApiMonsteraStub) ListNamespaces(ctx context.Context, 
 
 	response, ok := readResponse.Response.(*corepb.ReadResponse_ListNamespacesResponse)
 	if ok {
-		return response.ListNamespacesResponse, nil
+		return response.ListNamespacesResponse, readResponse.Error
 	} else {
 		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "invalid response type", map[string]string{"response": readResponse.String()})
 	}
@@ -174,7 +174,7 @@ func (s *ExampleServiceCoreApiMonsteraStub) CreateNamespace(ctx context.Context,
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_CreateNamespaceResponse)
 	if ok {
-		return response.CreateNamespaceResponse, nil
+		return response.CreateNamespaceResponse, updateResponse.Error
 	} else {
 		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "invalid response type", map[string]string{"response": updateResponse.String()})
 	}
@@ -192,7 +192,7 @@ func (s *ExampleServiceCoreApiMonsteraStub) UpdateNamespace(ctx context.Context,
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_UpdateNamespaceResponse)
 	if ok {
-		return response.UpdateNamespaceResponse, nil
+		return response.UpdateNamespaceResponse, updateResponse.Error
 	} else {
 		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "invalid response type", map[string]string{"response": updateResponse.String()})
 	}
@@ -210,7 +210,7 @@ func (s *ExampleServiceCoreApiMonsteraStub) DeleteNamespace(ctx context.Context,
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_DeleteNamespaceResponse)
 	if ok {
-		return response.DeleteNamespaceResponse, nil
+		return response.DeleteNamespaceResponse, updateResponse.Error
 	} else {
 		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "invalid response type", map[string]string{"response": updateResponse.String()})
 	}
@@ -228,7 +228,7 @@ func (s *ExampleServiceCoreApiMonsteraStub) AcquireLock(ctx context.Context, req
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_AcquireLockResponse)
 	if ok {
-		return response.AcquireLockResponse, nil
+		return response.AcquireLockResponse, updateResponse.Error
 	} else {
 		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "invalid response type", map[string]string{"response": updateResponse.String()})
 	}
@@ -246,7 +246,7 @@ func (s *ExampleServiceCoreApiMonsteraStub) ReleaseLock(ctx context.Context, req
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_ReleaseLockResponse)
 	if ok {
-		return response.ReleaseLockResponse, nil
+		return response.ReleaseLockResponse, updateResponse.Error
 	} else {
 		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "invalid response type", map[string]string{"response": updateResponse.String()})
 	}
@@ -264,7 +264,7 @@ func (s *ExampleServiceCoreApiMonsteraStub) DeleteLock(ctx context.Context, requ
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_DeleteLockResponse)
 	if ok {
-		return response.DeleteLockResponse, nil
+		return response.DeleteLockResponse, updateResponse.Error
 	} else {
 		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "invalid response type", map[string]string{"response": updateResponse.String()})
 	}
@@ -282,7 +282,7 @@ func (s *ExampleServiceCoreApiMonsteraStub) GetLock(ctx context.Context, request
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_GetLockResponse)
 	if ok {
-		return response.GetLockResponse, nil
+		return response.GetLockResponse, updateResponse.Error
 	} else {
 		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "invalid response type", map[string]string{"response": updateResponse.String()})
 	}
