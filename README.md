@@ -76,7 +76,7 @@ Just for demonstration purposes. In real Everblack Cloud it is implemented as de
 
 ## Executables
 
-The whole application consists of two executables:
+The whole application consists of two parts:
 
 * `cmd/gateway` - a stateless web server with public API. This is basically a runner for the Gateway gRPC server 
   from above.
@@ -90,6 +90,14 @@ on that node.
 
 ```
 go tool github.com/mattn/goreman start
+```
+
+There is also a standalone executable `cmd/standalone` that runs both parts of the application in a single Go process,
+non-sharded and non-replicated. Read more about standalone applications 
+[here](https://everblack.dev/docs/monstera/standalone-application/). To run a standalone app:
+
+```
+go run ./cmd/standalone --port=8000 --data-dir=./data/standalone
 ```
 
 ## Monstera codegen
