@@ -1,6 +1,8 @@
 # Monstera Example
 
 [![Go](https://github.com/evrblk/monstera-example/actions/workflows/go.yml/badge.svg)](https://github.com/evrblk/monstera-example/actions/workflows/go.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/evrblk/monstera-example)](https://goreportcard.com/report/github.com/evrblk/monstera-example)
+
 
 An example of how to build applications with [Monstera framework](https://github.com/evrblk/monstera). This is an 
 imaginary multi-tenant SaaS for distributed RW locks. Basically, this is a simplified version of Everblack Grackle 
