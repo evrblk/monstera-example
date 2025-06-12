@@ -1,21 +1,16 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"github.com/evrblk/monstera-example/gatewaypb"
 	"log"
 	"net"
 
-	"os"
-	"os/signal"
-	"path/filepath"
-	"syscall"
-
 	"github.com/evrblk/monstera"
 	"github.com/evrblk/monstera-example"
 	"google.golang.org/grpc"
+	"path/filepath"
 )
 
 var (
@@ -47,23 +42,6 @@ func main() {
 		grpc.UnaryInterceptor(authenticationMiddleware.Unary),
 	)
 
-	ctx, cancel := context.WithCancel(context.Background())
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
-	go func() {
-		select {
-		case <-c:
-			log.Println("Received SIGINT. Shutting down...")
-			cancel()
-			grpcServer.GracefulStop()
-		case <-ctx.Done():
-		}
-	}()
-	defer func() {
-		signal.Stop(c)
-		cancel()
-	}()
-
 	// Create and register Gateway server
 	exampleServiceApiGatewayServer := monsteraexample.NewExampleServiceApiServer(exampleServiceCoreApiClient)
 	defer exampleServiceApiGatewayServer.Close()
@@ -71,5 +49,4 @@ func main() {
 
 	log.Println("Starting API Gateway Server...")
 	grpcServer.Serve(lis)
-
 }
