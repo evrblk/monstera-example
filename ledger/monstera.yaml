@@ -1,0 +1,30 @@
+go_code:
+  output_package: github.com/evrblk/monstera-example/ledger
+  corepb_package: github.com/evrblk/monstera-example/ledger/corepb
+cores:
+  - name: Accounts
+    reads:
+      - method: ListTransactions
+        sharded: true
+      - method: GetTransaction
+        sharded: true
+      - method: GetAccount
+        sharded: true
+    updates:
+      - method: CreateTransaction
+        sharded: true
+      - method: CancelTransaction
+        sharded: true
+      - method: SettleTransaction
+        sharded: true
+      - method: CreateAccount
+        sharded: true
+    update_request_proto: UpdateRequest
+    update_response_proto: UpdateResponse
+    read_request_proto: ReadRequest
+    read_response_proto: ReadResponse
+
+stubs:
+  - name: LedgerService
+    cores:
+      - Accounts

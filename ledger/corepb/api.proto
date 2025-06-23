@@ -1,0 +1,97 @@
+syntax = "proto3";
+
+option go_package = "github.com/evrblk/monstera-example/ledger/corepb";
+
+package com.evrblk.monstera_example.ledger.corepb;
+
+message GetAccountRequest {
+  uint64 account_id = 1;
+}
+message GetAccountResponse {
+  Account account = 1;
+}
+
+message CreateAccountRequest {
+  uint64 account_id = 1;
+  int64 now = 2;
+}
+
+message CreateAccountResponse {
+  Account account = 1;
+}
+
+message GetTransactionRequest {
+  TransactionId transaction_id = 1;
+}
+
+message GetTransactionResponse {
+  Transaction transaction = 1;
+}
+
+message ListTransactionsRequest {
+  uint64 account_id = 1;
+}
+
+message ListTransactionsResponse {
+  repeated Transaction transactions = 1;
+}
+
+message CreateTransactionRequest {
+  TransactionId transaction_id = 1;
+  int64 amount = 2;
+  string description = 3;
+  bool settled = 4;
+  int64 now = 5;
+}
+
+message CreateTransactionResponse {
+  Transaction transaction = 1;
+}
+
+message SettleTransactionRequest {
+  TransactionId transaction_id = 1;
+  int64 now = 2;
+}
+
+message SettleTransactionResponse {
+  Transaction transaction = 1;
+}
+
+message CancelTransactionRequest {
+  TransactionId transaction_id = 1;
+  int64 now = 2;
+}
+
+message CancelTransactionResponse {
+  Transaction transaction = 1;
+}
+
+message Transaction {
+  TransactionId id = 1;
+  int64 amount = 2;
+  string description = 3;
+  TransactionStatus status = 4;
+  int64 created_at = 5;
+  int64 updated_at = 6;
+}
+
+message Account {
+  uint64 id = 1;
+  int64 available_balance = 2;
+  int64 settled_balance = 3;
+  int64 created_at = 4;
+  int64 updated_at = 5;
+}
+
+enum TransactionStatus {
+  TRANSACTION_STATUS_INVALID = 0;
+  TRANSACTION_STATUS_PENDING = 1;
+  TRANSACTION_STATUS_SETTLED = 2;
+  TRANSACTION_STATUS_CANCELLED = 3;
+  TRANSACTION_STATUS_INSUFFICIENT_FUNDS = 4;
+}
+
+message TransactionId {
+  uint64 account_id = 1;
+  uint64 transaction_id = 2;
+}

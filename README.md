@@ -3,40 +3,36 @@
 [![Go](https://github.com/evrblk/monstera-example/actions/workflows/go.yml/badge.svg)](https://github.com/evrblk/monstera-example/actions/workflows/go.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/evrblk/monstera-example)](https://goreportcard.com/report/github.com/evrblk/monstera-example)
 
+Several examples of how to build applications with [Monstera framework](https://github.com/evrblk/monstera). They are
+based on popular System Design type interview questions:
 
-An example of how to build applications with [Monstera framework](https://github.com/evrblk/monstera). This is an 
-imaginary multi-tenant SaaS for distributed RW locks. Basically, this is a simplified version of Everblack Grackle 
-service, with locks only, trivial account management, and no authentication. 
+* `dlocks` - Distributed RW-locks
+* `ledger` - A bookkeeping service for account balances and transactions
+
+All those projects follow the same structure which is described in details below. Some project-specific details
+can be found in corresponding README files.
 
 __Here is a bare minimum of docs you must read before jumping into this codebase:__
 
 * https://everblack.dev/docs/monstera/overview/
 * https://everblack.dev/docs/monstera/units-of-work/
-* https://everblack.dev/docs/grackle/concepts/
-* https://everblack.dev/docs/grackle/locks/
 
 Monstera framework does not force any particular application core implementation, method routing mechanism, or any 
 specific wire format. It is up to you to define that. However, over time I developed a certain style of how all
 Everblack services are implemented. To separate a clean part of the framework from that opinionated part I made
 two packages: `github.com/evrblk/monstera` for the core part, and `github.com/evrblk/monstera/x` for the rest.
-However, a lot of things are not generalizable or extractable into a library. And this example application shows how
-all of them can be assembled together.
+However, a lot of things are not generalizable or extractable into a library. And those example applications show 
+how all of them can be assembled together.
 
-## Applications cores
+## Application cores
 
-There are 3 application cores:
-
-* `AccountsCore` in `accounts.go`
-* `NamespacesCore` in `namespaces.go`
-* `LocksCore` in `locks.go`
-
-All these cores are implemented in my opinionated way and serve as an example of how it can be done. You are free to
+All cores are implemented in my opinionated way and serve as an example of how it can be done. You are free to
 do it any way you want, with different in-memory data structures or other embedded databases.
 
-Application cores store data in BadgerDB. There is one instance of BadgerDB per process, so multiple shards and multiple
-cores share it. To avoid conflicts, each table is prefixed with table IDs (in `tables.go`). Each shard has its own 
-boundaries (`lowerBound` and `upperBound`). Take a look how keys are built for tables and indexes (typically in the
-bottom of files with application cores and inside `monstera/x` package too).
+In most of those examples Application cores store data in BadgerDB. There is one instance of BadgerDB per process, 
+so multiple shards and multiple cores share it. To avoid conflicts, each table is prefixed with table IDs (in 
+`tables.go`). Each shard has its own boundaries (`lowerBound` and `upperBound`). Take a look how keys are built 
+for tables and indexes (typically in the bottom of files with application cores and inside `monstera/x` package too).
 
 All core data structures are defined in protobufs in `corepb/*`. Those structures are exposed from Monstera stubs
 and used by application cores to store data in BadgerDB. `corepb/cloud.proto` has high level containers for requests
@@ -44,9 +40,9 @@ and responses that are actually passed by Monstera. Monstera does not know anyth
 application cores and only passes binary blobs as requests and responses for reads and updates. Message routing to a
 binary blob and from a blob is based on `oneof` protobuf structure (see `adapters.go` and `stubs.go`).
 
-Take a look at tests (`accounts_test.go`, `locks_test.go` and `namespaces_test.go`). Application cores are 
-easily testable without any mocks, and even very complex business logic can be tested by feeding the correct seqeunce 
-of commands since all application cores are state machines without side effects.
+Take a look at unit tests. Application cores are easily testable without any mocks, and even very complex business 
+logic can be tested by feeding the correct seqeunce of commands since all application cores are state machines without 
+side effects.
 
 ## Gateway server
 
@@ -59,9 +55,9 @@ point for all user actions, and if you want to trace and understand the lifecycl
 Gateway server is the place to do:
 
 * Authentication
-* Authorization (not in this example)
+* Authorization
 * Validations
-* Throttling (not in this example)
+* Throttling
 
 Gateway server communicates with Monstera cluster via `monstera.MonsteraClient`. All Monstera operations are 
 deterministic, so the gateway is the place to generate random numbers or get the current time __before__ sending a core
@@ -119,7 +115,7 @@ Monstera codegen relies on several conventions in order to make it work in a typ
 
 * Methods of application core must have corresponding `*Response` and `*Request` objects in `go_code.corepb_package` 
   package. For example, `AcquireLock` of `Locks` core must have `AcquireLockRequest` and `AcquireLockResponse` proto 
-  messages in `github.com/evrblk/monstera-example/corepb`.
+  messages in `github.com/evrblk/monstera-example/dlocks/corepb`.
 * `*Response` and `*Request` objects must be included into `oneof` of corresponding high level containers 
   `update_request_proto`, `update_response_proto`, etc. For example, `AcquireLockRequest` must be included into 
   `UpdateRequest`, `AcquireLockResponse` must be included into `UpdateResponse`.
@@ -137,14 +133,6 @@ a `*Request` object. You specify explicitly how to extract a shard key from each
 Cluster config is used by MonsteraClient. There is already one generated for you in `cluster_config.pb`. 
 `cluster_config.json` is a human-readable version of the same config, check it out.
 
-Current cluster config has:
-
-* 3 nodes
-* 16 shards of `Namespaces`
-* 16 shards of `Locks`
-* 1 shard of `Accounts`
-* 3 replicas of each
-
 To print a json version of any config run:
 
 ```
@@ -156,34 +144,4 @@ you  will also need to update `Procfile` with that new ids:
 
 ```
 go run ./cmd/dev seed-monstera-cluster
-```
-
-## How to run
-
-1. Clone this repository.
-
-2. Make sure it builds:
-
-```
-go build -v ./...
-```
-
-3. Start a cluster with 3 nodes and a gateway server:
-
-```
-go tool github.com/mattn/goreman start
-```
-
-4. Create 100 accounts:
-
-```
-go run ./cmd/dev seed-accounts
-```
-
-5. Pick any account id from previous step output.
-
-6. Run a test scenario 1 which creates a namespace and tries to grab a lock with the account id:
-
-```
-go run ./cmd/dev scenario-1 --account-id=9fff3bf7d1f9561d
 ```

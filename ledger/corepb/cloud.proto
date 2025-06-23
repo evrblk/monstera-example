@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+option go_package = "github.com/evrblk/monstera-example/ledger/corepb";
+
+package com.evrblk.monstera_example.ledger.corepb;
+
+import "corepb/api.proto";
+import "x/errors.proto";
+
+message ReadRequest {
+  reserved 1;
+
+  oneof request {
+    GetTransactionRequest get_transaction_request = 2;
+    ListTransactionsRequest list_transactions_request = 3;
+    GetAccountRequest get_account_request = 4;
+  }
+}
+
+message ReadResponse {
+  com.evrblk.monstera.monsterax.Error error = 1;
+
+  oneof response {
+    GetTransactionResponse get_transaction_response = 2;
+    ListTransactionsResponse list_transactions_response = 3;
+    GetAccountResponse get_account_response = 4;
+  }
+}
+
+message UpdateRequest {
+  reserved 1;
+
+  oneof request {
+    CreateTransactionRequest create_transaction_request = 2;
+    CancelTransactionRequest cancel_transaction_request = 3;
+    SettleTransactionRequest settle_transaction_request = 4;
+
+    CreateAccountRequest create_account_request = 5;
+  }
+}
+
+message UpdateResponse {
+  com.evrblk.monstera.monsterax.Error error = 1;
+
+  oneof response {
+    CreateTransactionResponse create_transaction_response = 2;
+    CancelTransactionResponse cancel_transaction_response = 3;
+    SettleTransactionResponse settle_transaction_response = 4;
+
+    CreateAccountResponse create_account_response = 5;
+  }
+}

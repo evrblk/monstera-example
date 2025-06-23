@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+option go_package = "github.com/evrblk/monstera-example/dlocks/corepb";
+
+package com.evrblk.monstera_example.dlocks.corepb;
+
+import "corepb/api.proto";
+import "x/errors.proto";
+
+message ReadRequest {
+  reserved 1;
+
+  oneof request {
+    GetAccountRequest get_account_request = 2;
+    ListAccountsRequest list_accounts_request = 3;
+
+    GetNamespaceRequest get_namespace_request = 4;
+    ListNamespacesRequest list_namespaces_request = 5;
+  }
+}
+
+message ReadResponse {
+  com.evrblk.monstera.monsterax.Error error = 1;
+
+  oneof response {
+    GetAccountResponse get_account_response = 2;
+    ListAccountsResponse list_accounts_response = 3;
+
+    GetNamespaceResponse get_namespace_response = 4;
+    ListNamespacesResponse list_namespaces_response = 5;
+  }
+}
+
+message UpdateRequest {
+  reserved 1;
+
+  oneof request {
+    AcquireLockRequest acquire_lock_request = 2;
+    ReleaseLockRequest release_lock_request = 3;
+    DeleteLockRequest delete_lock_request = 4;
+    GetLockRequest get_lock_request = 5;
+
+    CreateNamespaceRequest create_namespace_request = 6;
+    UpdateNamespaceRequest update_namespace_request = 7;
+    DeleteNamespaceRequest delete_namespace_request = 8;
+
+    CreateAccountRequest create_account_request = 9;
+    UpdateAccountRequest update_account_request = 10;
+    DeleteAccountRequest delete_account_request = 11;
+  }
+}
+
+message UpdateResponse {
+  com.evrblk.monstera.monsterax.Error error = 1;
+
+  oneof response {
+    AcquireLockResponse acquire_lock_response = 2;
+    ReleaseLockResponse release_lock_response = 3;
+    DeleteLockResponse delete_lock_response = 4;
+    GetLockResponse get_lock_response = 5;
+
+    CreateNamespaceResponse create_namespace_response = 6;
+    UpdateNamespaceResponse update_namespace_response = 7;
+    DeleteNamespaceResponse delete_namespace_response = 8;
+
+    CreateAccountResponse create_account_response = 9;
+    UpdateAccountResponse update_account_response = 10;
+    DeleteAccountResponse delete_account_response = 11;
+  }
+}
