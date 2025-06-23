@@ -1,4 +1,4 @@
-# Monstera Example
+# Monstera Examples
 
 [![Go](https://github.com/evrblk/monstera-example/actions/workflows/go.yml/badge.svg)](https://github.com/evrblk/monstera-example/actions/workflows/go.yml)
 
@@ -9,7 +9,7 @@ based on popular System Design type interview questions:
 * `ledger` - A bookkeeping service for account balances and transactions
 
 All those projects follow the same structure which is described in details below. Some project-specific details
-can be found in corresponding README files.
+can be found in corresponding `README.md` files.
 
 __Here is a bare minimum of docs you must read before jumping into this codebase:__
 
@@ -28,7 +28,7 @@ how all of them can be assembled together.
 All cores are implemented in my opinionated way and serve as an example of how it can be done. You are free to
 do it any way you want, with different in-memory data structures or other embedded databases.
 
-In most of those examples Application cores store data in BadgerDB. There is one instance of BadgerDB per process, 
+In most of those examples, Application cores store data in BadgerDB. There is one instance of BadgerDB per process, 
 so multiple shards and multiple cores share it. To avoid conflicts, each table is prefixed with table IDs (in 
 `tables.go`). Each shard has its own boundaries (`lowerBound` and `upperBound`). Take a look how keys are built 
 for tables and indexes (typically in the bottom of files with application cores and inside `monstera/x` package too).
@@ -120,11 +120,11 @@ Monstera codegen relies on several conventions in order to make it work in a typ
   `UpdateRequest`, `AcquireLockResponse` must be included into `UpdateResponse`.
 
 The reason why I do not generate high level containers (in `corepb/cloud.proto`) is because of protobuf field tags.
-They need to be consistent and never change. That means I would need to assign field tags right in the yaml file, which
+They need to be consistent and never change. That means I would need to assign field tags right in the YAML file, which
 I did not like. If I find an elegant and safe way to do it, I will simplify this codegen part.
 
 `sharding.go` has an implementation of a shard key calculator. I chose not to use annotations or reflection to extract
-shard keys from requests. Instead, Monstera codegen generates a simple interface where every  method corresponds to 
+shard keys from requests. Instead, Monstera codegen generates a simple interface where every method corresponds to 
 a `*Request` object. You specify explicitly how to extract a shard key from each request with one line of Go code.
 
 ## Cluster config
@@ -132,14 +132,14 @@ a `*Request` object. You specify explicitly how to extract a shard key from each
 Cluster config is used by MonsteraClient. There is already one generated for you in `cluster_config.pb`. 
 `cluster_config.json` is a human-readable version of the same config, check it out.
 
-To print a json version of any config run:
+To print a JSON version of any config run:
 
 ```
 go tool github.com/evrblk/monstera/cmd/monstera cluster print-config --monstera-config=./cluster_config.pb
 ```
 
-You can seed a new config. Keep in mind, if you run this command it will regenerate the config with new random ids and 
-you  will also need to update `Procfile` with that new ids:
+You can seed a new config. Keep in mind, if you run this command it will regenerate the config with new random ids, and 
+you will also need to update `Procfile` with those new ids:
 
 ```
 go run ./cmd/dev seed-monstera-cluster

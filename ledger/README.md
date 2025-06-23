@@ -26,7 +26,14 @@ Compared to other popular approaches to solve Ledger System Design interview que
 
 There is 1 application core:
 
-* `AccountsCore` in `accounts.go`
+* `AccountsCore` in `accounts.go`. Sharded by Account Id.
+  * `CreateAccount`
+  * `GetAccount`
+  * `CreateTransaction`
+  * `GetTransaction`
+  * `CancelTransaction`
+  * `SettleTransaction`
+  * `ListTransactions`
 
 Take a look at tests (`accounts_test.go`). 
 

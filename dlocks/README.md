@@ -32,9 +32,23 @@ used to forcefully unlock any lock.
 
 There are 3 application cores:
 
-* `AccountsCore` in `accounts.go`
-* `NamespacesCore` in `namespaces.go`
-* `LocksCore` in `locks.go`
+* `AccountsCore` in `accounts.go`. Not sharded.
+  * `ListAccounts`
+  * `GetAccount`
+  * `CreateAccount`
+  * `UpdateAccount`
+  * `DeleteAccount`
+* `NamespacesCore` in `namespaces.go`. Sharded by Account Id.
+  * `GetNamespace`
+  * `ListNamespaces`
+  * `CreateNamespace`
+  * `UpdateNamespace`
+  * `DeleteNamespace`
+* `LocksCore` in `locks.go`. Sharded by Account Id + Namespace Name.
+  * `AcquireLock`
+  * `ReleaseLock`
+  * `DeleteLock`
+  * `GetLock`
 
 Take a look at tests (`locks_test.go`, `accounts_test.go`, and `namespaces_test.go`). 
 
