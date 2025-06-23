@@ -84,7 +84,7 @@ func TestCreateAndSettleTransaction(t *testing.T) {
 	require.Equal(transactionId, response1.Transaction.Id.TransactionId)
 	require.EqualValues(100, response1.Transaction.Amount)
 
-	// T+1m:  get account
+	// T+1m: get account
 	response2, err := accountsCore.GetAccount(&corepb.GetAccountRequest{
 		AccountId: accountId,
 	})
@@ -106,7 +106,7 @@ func TestCreateAndSettleTransaction(t *testing.T) {
 	require.EqualValues(now.Add(2*time.Minute).UnixNano(), response3.Transaction.UpdatedAt)
 	require.Equal(corepb.TransactionStatus_TRANSACTION_STATUS_SETTLED, response3.Transaction.Status)
 
-	// T+2m:  get account
+	// T+2m: get account
 	response4, err := accountsCore.GetAccount(&corepb.GetAccountRequest{
 		AccountId: accountId,
 	})
@@ -133,7 +133,7 @@ func TestCreateAndSettleTransaction(t *testing.T) {
 	require.Equal(corepb.TransactionStatus_TRANSACTION_STATUS_PENDING, response5.Transaction.Status)
 	require.EqualValues(-10, response5.Transaction.Amount)
 
-	// T+3m:  get account
+	// T+3m: get account
 	response6, err := accountsCore.GetAccount(&corepb.GetAccountRequest{
 		AccountId: accountId,
 	})
@@ -153,7 +153,7 @@ func TestCreateAndSettleTransaction(t *testing.T) {
 	require.NotNil(response7.Transaction)
 	require.Equal(corepb.TransactionStatus_TRANSACTION_STATUS_SETTLED, response7.Transaction.Status)
 
-	// T+4m:  get account
+	// T+4m: get account
 	response8, err := accountsCore.GetAccount(&corepb.GetAccountRequest{
 		AccountId: accountId,
 	})

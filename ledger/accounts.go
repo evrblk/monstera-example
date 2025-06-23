@@ -103,33 +103,33 @@ func (c *AccountsCore) CreateTransaction(request *corepb.CreateTransactionReques
 		UpdatedAt:   request.Now,
 	}
 
-	// if money is added to the account (debits)
+	// if money is added to the account (topup)
 	if transaction.Amount >= 0 {
 		if request.Settled {
 			transaction.Status = corepb.TransactionStatus_TRANSACTION_STATUS_SETTLED
 
-			// settled debits increase the balance
+			// settled topups increase the balance
 			account.AvailableBalance += transaction.Amount
 			account.SettledBalance += transaction.Amount
 		} else {
 			transaction.Status = corepb.TransactionStatus_TRANSACTION_STATUS_PENDING
-			// pending debits do not increase the balance
+			// pending topups do not increase the balance
 		}
 	} else {
 		if account.AvailableBalance+transaction.Amount < 0 {
-			// negative balance is not allowed for credits
+			// negative balance is not allowed for purchases
 			transaction.Status = corepb.TransactionStatus_TRANSACTION_STATUS_INSUFFICIENT_FUNDS
 		} else {
 			if request.Settled {
 				transaction.Status = corepb.TransactionStatus_TRANSACTION_STATUS_SETTLED
 
-				// settled credits decrease the balance (amount is negative)
+				// settled purchases decrease the balance (amount is negative)
 				account.AvailableBalance += transaction.Amount
 				account.SettledBalance += transaction.Amount
 			} else {
 				transaction.Status = corepb.TransactionStatus_TRANSACTION_STATUS_PENDING
 
-				// pending credits decrease available balance only
+				// pending purchases decrease available balance only
 				account.AvailableBalance += transaction.Amount
 			}
 		}
@@ -190,8 +190,8 @@ func (c *AccountsCore) CancelTransaction(request *corepb.CancelTransactionReques
 	transaction.Status = corepb.TransactionStatus_TRANSACTION_STATUS_CANCELLED
 	transaction.UpdatedAt = request.Now
 
-	// pending debits do not change the balance, no need to do anything
-	// pending credits only change the available balance, need to subtract transaction amount
+	// pending topups do not change the balance, no need to do anything
+	// pending purchases only change the available balance, need to subtract transaction amount
 	if transaction.Amount < 0 {
 		account.AvailableBalance -= transaction.Amount
 	}
@@ -251,8 +251,8 @@ func (c *AccountsCore) SettleTransaction(request *corepb.SettleTransactionReques
 	transaction.Status = corepb.TransactionStatus_TRANSACTION_STATUS_SETTLED
 	transaction.UpdatedAt = request.Now
 
-	// pending debits do not change the balance, need to update both balances
-	// pending credits only change the available balance, need to update settled balance
+	// pending topups do not change the balance, need to update both balances
+	// pending purchases only change the available balance, need to update settled balance
 	if transaction.Amount >= 0 {
 		account.AvailableBalance += transaction.Amount
 		account.SettledBalance += transaction.Amount

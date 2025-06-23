@@ -5,12 +5,12 @@
 Simple bookkeeping service, it has multiple accounts, tracks their balances and allows to create transactions.
 
 A transaction can be created with `CreateTransaction`. Transaction `amount` will be added to the account balance.
-Positive transactions are debits (or "topups"), negative transactions are credits (or "purchases"). A transaction can be
+Positive transactions are topups, negative transactions are purchases. A transaction can be
 instant (with `settled = true`) or pending (with `settled = false`). Pending transactions will be settled or canceled 
 later with `SettleTransaction` and `CancelTransaction` respectively.
 
 Account balance is represented with `available_balance` and `settled_balance` fields. Settled transaction affect both
-balances. Pending credits are subtracted from the avaialble balance only. Each negative transaction is checked against 
+balances. Pending purchases are subtracted from the avaialble balance only. Each negative transaction is checked against 
 available balance and `INSUFFICIED_FUNDS` error will be returned if the balance goes negative after such a transaction.
 It is possible to topup negative balance to any amount.
 
@@ -21,7 +21,6 @@ Compared to other popular approaches to solve Ledger System Design interview que
 * allows for complex logic around available and settled balances, or around negative balances 
 * has fewer moving parts (no streams, no async workers)
 * scales infinitely by the number of accounts
-
 
 ## Application cores
 
