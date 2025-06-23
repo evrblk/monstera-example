@@ -1,7 +1,6 @@
 # Monstera Example
 
 [![Go](https://github.com/evrblk/monstera-example/actions/workflows/go.yml/badge.svg)](https://github.com/evrblk/monstera-example/actions/workflows/go.yml)
-[![Go Report Card](https://goreportcard.com/badge/github.com/evrblk/monstera-example)](https://goreportcard.com/report/github.com/evrblk/monstera-example)
 
 Several examples of how to build applications with [Monstera framework](https://github.com/evrblk/monstera). They are
 based on popular System Design type interview questions:

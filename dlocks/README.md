@@ -1,5 +1,7 @@
 # Distributed Locks
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/evrblk/monstera-example/dlocks)](https://goreportcard.com/report/github.com/evrblk/monstera-example/ledger/dlocks)
+
 A distributed system for read/write locks. A lock can be exclusively locked for writing by a single process, or it can 
 be locked for reading by multiple processes. If it is currently locked for writing it cannot be locked for reading, and
 vise versa. It can be used it as a mutex if it is locked only for writing by all participating processes.

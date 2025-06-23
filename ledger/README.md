@@ -1,5 +1,7 @@
 # Ledger Service
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/evrblk/monstera-example/ledger)](https://goreportcard.com/report/github.com/evrblk/monstera-example/ledger)
+
 Simple bookkeeping service, it has multiple accounts, tracks their balances and allows to create transactions.
 
 A transaction can be created with `CreateTransaction`. Transaction `amount` will be added to the account balance.
