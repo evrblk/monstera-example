@@ -23,10 +23,10 @@ func TestUserIdEncodeDecode(t *testing.T) {
 func TestUserIdDecode(t *testing.T) {
 	require := require.New(t)
 
-	_, err := DecodeUserId("c6ab9Xfb")
+	_, err := DecodeUserId("DWf5f+K")
 	require.Error(err)
 
-	_, err = DecodeUserId("3d2dbe65")
+	_, err = DecodeUserId("pWzepB")
 	require.NoError(err)
 }
 
@@ -48,9 +48,9 @@ func TestShortUrlIdEncodeDecode(t *testing.T) {
 func TestShortUrlIdDecode(t *testing.T) {
 	require := require.New(t)
 
-	_, err := DecodeShortUrlId("206af3de774e2Sc7")
+	_, err := DecodeShortUrlId("Zt2fmRL/qeIN")
 	require.Error(err)
 
-	_, err = DecodeShortUrlId("206af3de774e2dc7")
+	_, err = DecodeShortUrlId("U2rA3N7BHXI")
 	require.NoError(err)
 }

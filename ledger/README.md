@@ -21,6 +21,8 @@ Compared to other popular approaches to solve Ledger System Design interview que
 * allows for complex logic around available and settled balances, or around negative balances 
 * has fewer moving parts (no streams, no async workers)
 * scales infinitely by the number of accounts
+  
+![Diagram](diagram.png)
 
 ## Application cores
 

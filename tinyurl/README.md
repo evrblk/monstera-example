@@ -2,6 +2,14 @@
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/evrblk/monstera-example/tinyurl)](https://goreportcard.com/report/github.com/evrblk/monstera-example/tinyurl)
 
+URL shortener service with multiple users. Users can list their URLs. Short URLs are base62 encoded 8 bytes. This simple
+version has 4 bytes for a user ID and 4 bytes for a URL ID. It can be tuned up or down based on expected number of users
+or URLs per user. If there were no requirement to be able to list URLs for a user then user id could be removed 
+completely from the system. Here short URLs have user ID inside them so it is possible to route `GetShortUrl` requests 
+to corresponding shards based on that user ID. Also `GetShortUrl` reads from followers (eventually consistent) to 
+increase read throughput of the system.
+
+![Diagram](diagram.png)
 
 ## Application cores
 

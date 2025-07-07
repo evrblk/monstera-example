@@ -28,6 +28,8 @@ of lock holders if it is locked for reading. If the process ID from `ReleaseLock
 will be no errors, but nothing will be changed as the result. `DeleteLock` simply deletes a lock in any state. It can be
 used to forcefully unlock any lock.
 
+![Diagram](diagram.png)
+
 ## Application cores
 
 There are three application cores:
