@@ -6,7 +6,8 @@ Several examples of how to build applications with [Monstera framework](https://
 based on popular System Design type interview questions:
 
 * `dlocks` - Distributed RW-locks
-* `ledger` - A bookkeeping service for account balances and transactions
+* `ledger` - Bookkeeping service for account balances and transactions
+* `tinyurl` - URL shortening service
 
 All those projects follow the same structure which is described in details below. Some project-specific details
 can be found in corresponding `README.md` files.
@@ -45,7 +46,7 @@ side effects.
 
 ## Gateway server
 
-A gateway (or frontend) server is the public API part of the system. In this example it serves gRPC, but it can be
+A gateway (or frontend) server is the public API part of the system. In this example, it serves gRPC, but it can be
 anything you want (OpenAPI, ConnectRPC, gRPC, Gin, etc). Gateway gRPC is defined in `gatewaypb/*`. Protos are not
 shared between gateway and core parts for clean separation of core business layer and presentation layer. The code for
 converting between them lives in `pbconv.go`. `server.go` is the implementation of the gateway API. It is the entry 
@@ -63,7 +64,7 @@ deterministic, so the gateway is the place to generate random numbers or get the
 request to Monstera cluster.
 
 This example is relatively simple and all operations from gateway API map 1-to-1 to core operations (not including 
-authentication). However, in more complex applications a single gateway operation can collect or update data in 
+authentication). However, in more complex applications, a single gateway operation can collect or update data in 
 multiple application cores (Everblack Bison and Eveblack Moab has such operations, for example).
 
 Here authentication is dumb. An account id is passed in headers and the server picks it up without any actual check. 
@@ -80,10 +81,10 @@ The whole application consists of two parts:
 * `cmd/node` - stateful Monstera node with all the data and business logic. This is a runner for 
   `monstera.MonsteraServer` and the place to register all implementations of your application cores.
 
-Each Monstera node has 2 BadgerDB stores: one for all application cores, and one for all Raft logs from all shards
+Each Monstera node has two BadgerDB stores: one for all application cores, and one for all Raft logs from all shards
 on that node.
 
-`Procfile` has 3 Monstera nodes and 1 gateway server configured. Use goreman to start:
+`Procfile` has three Monstera nodes and one gateway server configured. Use goreman to start:
 
 ```
 go tool github.com/mattn/goreman start
@@ -99,7 +100,7 @@ go run ./cmd/standalone --port=8000 --data-dir=./data/standalone
 
 ## Monstera codegen
 
-Monstera codegen is the opinionated part of the framework. I wanted to achieve type-safety and utilize comple-time 
+Monstera codegen is the opinionated part of the framework. I wanted to achieve type-safety and utilize compile-time 
 checks without reflection, but wanted to eliminate human mistakes from vast boilerplate code. So I generate all 
 boilerplate code.
 
@@ -110,7 +111,7 @@ boilerplate code.
 * `adapters.go` with adapter to application cores, that turns binary blobs into routable requests
 * `stubs.go` with service stubs, that turn requests into binary blobs and route them to the correct application core
 
-Monstera codegen relies on several conventions in order to make it work in a type-safe way:
+Monstera codegen relies on several conventions to make it work in a type-safe way:
 
 * Methods of application core must have corresponding `*Response` and `*Request` objects in `go_code.corepb_package` 
   package. For example, `AcquireLock` of `Locks` core must have `AcquireLockRequest` and `AcquireLockResponse` proto 

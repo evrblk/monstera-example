@@ -1,0 +1,36 @@
+go_code:
+  output_package: github.com/evrblk/monstera-example/tinyurl
+  corepb_package: github.com/evrblk/monstera-example/tinyurl/corepb
+cores:
+  - name: ShortUrls
+    reads:
+      - method: GetShortUrl
+        sharded: true
+        allow_read_from_followers: true
+      - method: ListShortUrls
+        sharded: true
+    updates:
+      - method: CreateShortUrl
+        sharded: true
+    update_request_proto: UpdateRequest
+    update_response_proto: UpdateResponse
+    read_request_proto: ReadRequest
+    read_response_proto: ReadResponse
+
+  - name: Users
+    reads:
+      - method: GetUser
+        sharded: true
+    updates:
+      - method: CreateUser
+        sharded: true
+    update_request_proto: UpdateRequest
+    update_response_proto: UpdateResponse
+    read_request_proto: ReadRequest
+    read_response_proto: ReadResponse
+
+stubs:
+  - name: TinyUrlService
+    cores:
+      - ShortUrls
+      - Users

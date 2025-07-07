@@ -3,8 +3,8 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/evrblk/monstera-example/dlocks)](https://goreportcard.com/report/github.com/evrblk/monstera-example/ledger/dlocks)
 
 A distributed system for read/write locks. A lock can be exclusively locked for writing by a single process, or it can 
-be locked for reading by multiple processes. If it is currently locked for writing it cannot be locked for reading, and
-vise versa. It can be used it as a mutex if it is locked only for writing by all participating processes.
+be locked for reading by multiple processes. If it is currently locked for writing, it cannot be locked for reading, and
+vise versa. It can be used as a mutex if it is locked only for writing by all participating processes.
 
 All locks are organized into Namespaces. Locks are referenced by name. Names are unique within a namespace. For example,
 an ID of a resource that you want to control with locking can be used as a lock name.
@@ -30,7 +30,7 @@ used to forcefully unlock any lock.
 
 ## Application cores
 
-There are 3 application cores:
+There are three application cores:
 
 * `AccountsCore` in `accounts.go`. Not sharded.
   * `ListAccounts`
@@ -38,13 +38,13 @@ There are 3 application cores:
   * `CreateAccount`
   * `UpdateAccount`
   * `DeleteAccount`
-* `NamespacesCore` in `namespaces.go`. Sharded by Account Id.
+* `NamespacesCore` in `namespaces.go`. Sharded by Account ID.
   * `GetNamespace`
   * `ListNamespaces`
   * `CreateNamespace`
   * `UpdateNamespace`
   * `DeleteNamespace`
-* `LocksCore` in `locks.go`. Sharded by Account Id + Namespace Name.
+* `LocksCore` in `locks.go`. Sharded by Account ID + Namespace Name.
   * `AcquireLock`
   * `ReleaseLock`
   * `DeleteLock`
@@ -90,9 +90,9 @@ go tool github.com/mattn/goreman start
 go run ./cmd/dev seed-accounts
 ```
 
-5. Pick any account id from previous step output.
+5. Pick any account id from the previous step output.
 
-6. Run a test scenario 1 which creates a namespace and tries to grab a lock with the account id:
+6. Run test scenario 1 which creates a namespace and tries to grab a lock with the account id:
 
 ```
 go run ./cmd/dev scenario-1 --account-id=9fff3bf7d1f9561d

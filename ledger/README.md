@@ -10,7 +10,7 @@ instant (with `settled = true`) or pending (with `settled = false`). Pending tra
 later with `SettleTransaction` and `CancelTransaction` respectively.
 
 Account balance is represented with `available_balance` and `settled_balance` fields. Settled transaction affect both
-balances. Pending purchases are subtracted from the avaialble balance only. Each negative transaction is checked against 
+balances. Pending purchases are subtracted from the available balance only. Each negative transaction is checked against 
 available balance and `INSUFFICIED_FUNDS` error will be returned if the balance goes negative after such a transaction.
 It is possible to topup negative balance to any amount.
 
@@ -24,9 +24,9 @@ Compared to other popular approaches to solve Ledger System Design interview que
 
 ## Application cores
 
-There is 1 application core:
+There is one application core:
 
-* `AccountsCore` in `accounts.go`. Sharded by Account Id.
+* `AccountsCore` in `accounts.go`. Sharded by account id.
   * `CreateAccount`
   * `GetAccount`
   * `CreateTransaction`
@@ -73,9 +73,9 @@ go tool github.com/mattn/goreman start
 go run ./cmd/dev seed-accounts
 ```
 
-5. Pick any account id from previous step output.
+5. Pick any account id from the previous step output.
 
-6. Run a test scenario 1 which creates a namespace and tries to grab a lock with the account id:
+6. Run test scenario 1 which creates a pending transaction and then settles it for the account id:
 
 ```
 go run ./cmd/dev scenario-1 --account-id=9fff3bf7d1f9561d

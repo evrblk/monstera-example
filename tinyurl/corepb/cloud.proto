@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+option go_package = "github.com/evrblk/monstera-example/tinyurl/corepb";
+
+package com.evrblk.monstera_example.tinyurl.corepb;
+
+import "corepb/api.proto";
+import "x/errors.proto";
+
+message ReadRequest {
+  reserved 1;
+
+  oneof request {
+    GetShortUrlRequest get_short_url_request = 2;
+    ListShortUrlsRequest list_short_urls_request = 3;
+    GetUserRequest get_user_request = 4;
+  }
+}
+
+message ReadResponse {
+  com.evrblk.monstera.monsterax.Error error = 1;
+
+  oneof response {
+    GetShortUrlResponse get_short_url_response = 2;
+    ListShortUrlsResponse list_short_urls_response = 3;
+    GetUserResponse get_user_response = 4;
+  }
+}
+
+message UpdateRequest {
+  reserved 1;
+
+  oneof request {
+    CreateUserRequest create_user_request = 2;
+    CreateShortUrlRequest create_short_url_request = 3;
+  }
+}
+
+message UpdateResponse {
+  com.evrblk.monstera.monsterax.Error error = 1;
+
+  oneof response {
+    CreateUserResponse create_user_response = 2;
+    CreateShortUrlResponse create_short_url_response = 3;
+  }
+}
