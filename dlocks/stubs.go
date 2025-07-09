@@ -308,6 +308,8 @@ type LocksServiceCoreApiStandaloneStub struct {
 	mu sync.RWMutex
 }
 
+var _ LocksServiceCoreApi = &LocksServiceCoreApiStandaloneStub{}
+
 func (s *LocksServiceCoreApiStandaloneStub) ListAccounts(ctx context.Context, request *corepb.ListAccountsRequest) (*corepb.ListAccountsResponse, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()

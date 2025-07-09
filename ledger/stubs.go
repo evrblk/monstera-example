@@ -171,6 +171,8 @@ type LedgerServiceCoreApiStandaloneStub struct {
 	mu sync.RWMutex
 }
 
+var _ LedgerServiceCoreApi = &LedgerServiceCoreApiStandaloneStub{}
+
 func (s *LedgerServiceCoreApiStandaloneStub) ListTransactions(ctx context.Context, request *corepb.ListTransactionsRequest) (*corepb.ListTransactionsResponse, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()

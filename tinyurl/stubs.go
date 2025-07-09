@@ -135,6 +135,8 @@ type TinyUrlServiceCoreApiStandaloneStub struct {
 	mu sync.RWMutex
 }
 
+var _ TinyUrlServiceCoreApi = &TinyUrlServiceCoreApiStandaloneStub{}
+
 func (s *TinyUrlServiceCoreApiStandaloneStub) GetShortUrl(ctx context.Context, request *corepb.GetShortUrlRequest) (*corepb.GetShortUrlResponse, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
