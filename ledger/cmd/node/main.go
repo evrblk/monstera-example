@@ -44,7 +44,7 @@ func main() {
 	dataStore := monstera.NewBadgerStore(filepath.Join(*dataDir, "data"))
 	raftStore := monstera.NewBadgerStore(filepath.Join(*dataDir, "raft"))
 
-	monsteraNode := monstera.NewNode(*dataDir, *nodeId, clusterConfig, raftStore)
+	monsteraNode := monstera.NewNode(*dataDir, *nodeId, clusterConfig, raftStore, monstera.DefaultMonsteraNodeConfig)
 
 	monsteraNode.RegisterApplicationCore(&monstera.ApplicationCoreDescriptor{
 		Name:                   "Accounts",

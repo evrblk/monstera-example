@@ -7,6 +7,7 @@ import (
 	monstera "github.com/evrblk/monstera"
 	corepb "github.com/evrblk/monstera-example/tinyurl/corepb"
 	monsterax "github.com/evrblk/monstera/x"
+	proto "google.golang.org/protobuf/proto"
 	"sync"
 )
 
@@ -28,12 +29,22 @@ var _ TinyUrlServiceCoreApi = &TinyUrlServiceCoreApiMonsteraStub{}
 
 func (s *TinyUrlServiceCoreApiMonsteraStub) GetShortUrl(ctx context.Context, request *corepb.GetShortUrlRequest) (*corepb.GetShortUrlResponse, error) {
 	readRequest := &corepb.ReadRequest{Request: &corepb.ReadRequest_GetShortUrlRequest{GetShortUrlRequest: request}}
-	readResponse := &corepb.ReadResponse{}
+	requestBytes, err := proto.Marshal(readRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.GetShortUrlShardKey(request)
 
-	err := s.monsteraClient.Read(ctx, "ShortUrls", shardKey, true, readRequest, readResponse)
+	responseBytes, err := s.monsteraClient.Read(ctx, "ShortUrls", shardKey, true, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	readResponse := &corepb.ReadResponse{}
+	err = proto.Unmarshal(responseBytes, readResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := readResponse.Response.(*corepb.ReadResponse_GetShortUrlResponse)
@@ -46,12 +57,22 @@ func (s *TinyUrlServiceCoreApiMonsteraStub) GetShortUrl(ctx context.Context, req
 
 func (s *TinyUrlServiceCoreApiMonsteraStub) ListShortUrls(ctx context.Context, request *corepb.ListShortUrlsRequest) (*corepb.ListShortUrlsResponse, error) {
 	readRequest := &corepb.ReadRequest{Request: &corepb.ReadRequest_ListShortUrlsRequest{ListShortUrlsRequest: request}}
-	readResponse := &corepb.ReadResponse{}
+	requestBytes, err := proto.Marshal(readRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.ListShortUrlsShardKey(request)
 
-	err := s.monsteraClient.Read(ctx, "ShortUrls", shardKey, false, readRequest, readResponse)
+	responseBytes, err := s.monsteraClient.Read(ctx, "ShortUrls", shardKey, false, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	readResponse := &corepb.ReadResponse{}
+	err = proto.Unmarshal(responseBytes, readResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := readResponse.Response.(*corepb.ReadResponse_ListShortUrlsResponse)
@@ -64,12 +85,22 @@ func (s *TinyUrlServiceCoreApiMonsteraStub) ListShortUrls(ctx context.Context, r
 
 func (s *TinyUrlServiceCoreApiMonsteraStub) CreateShortUrl(ctx context.Context, request *corepb.CreateShortUrlRequest) (*corepb.CreateShortUrlResponse, error) {
 	updateRequest := &corepb.UpdateRequest{Request: &corepb.UpdateRequest_CreateShortUrlRequest{CreateShortUrlRequest: request}}
-	updateResponse := &corepb.UpdateResponse{}
+	requestBytes, err := proto.Marshal(updateRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.CreateShortUrlShardKey(request)
 
-	err := s.monsteraClient.Update(ctx, "ShortUrls", shardKey, updateRequest, updateResponse)
+	responseBytes, err := s.monsteraClient.Update(ctx, "ShortUrls", shardKey, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	updateResponse := &corepb.UpdateResponse{}
+	err = proto.Unmarshal(responseBytes, updateResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_CreateShortUrlResponse)
@@ -82,12 +113,22 @@ func (s *TinyUrlServiceCoreApiMonsteraStub) CreateShortUrl(ctx context.Context, 
 
 func (s *TinyUrlServiceCoreApiMonsteraStub) GetUser(ctx context.Context, request *corepb.GetUserRequest) (*corepb.GetUserResponse, error) {
 	readRequest := &corepb.ReadRequest{Request: &corepb.ReadRequest_GetUserRequest{GetUserRequest: request}}
-	readResponse := &corepb.ReadResponse{}
+	requestBytes, err := proto.Marshal(readRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.GetUserShardKey(request)
 
-	err := s.monsteraClient.Read(ctx, "Users", shardKey, false, readRequest, readResponse)
+	responseBytes, err := s.monsteraClient.Read(ctx, "Users", shardKey, false, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	readResponse := &corepb.ReadResponse{}
+	err = proto.Unmarshal(responseBytes, readResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := readResponse.Response.(*corepb.ReadResponse_GetUserResponse)
@@ -100,12 +141,22 @@ func (s *TinyUrlServiceCoreApiMonsteraStub) GetUser(ctx context.Context, request
 
 func (s *TinyUrlServiceCoreApiMonsteraStub) CreateUser(ctx context.Context, request *corepb.CreateUserRequest) (*corepb.CreateUserResponse, error) {
 	updateRequest := &corepb.UpdateRequest{Request: &corepb.UpdateRequest_CreateUserRequest{CreateUserRequest: request}}
-	updateResponse := &corepb.UpdateResponse{}
+	requestBytes, err := proto.Marshal(updateRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.CreateUserShardKey(request)
 
-	err := s.monsteraClient.Update(ctx, "Users", shardKey, updateRequest, updateResponse)
+	responseBytes, err := s.monsteraClient.Update(ctx, "Users", shardKey, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	updateResponse := &corepb.UpdateResponse{}
+	err = proto.Unmarshal(responseBytes, updateResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_CreateUserResponse)

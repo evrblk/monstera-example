@@ -3,7 +3,7 @@ module github.com/evrblk/monstera-example/ledger
 go 1.24.0
 
 require (
-	github.com/evrblk/monstera v0.0.0-20250709154545-42c92cfae92c
+	github.com/evrblk/monstera v0.0.0-20250716202651-060a42e9318b
 	github.com/samber/lo v1.51.0
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0

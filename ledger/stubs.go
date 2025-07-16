@@ -7,6 +7,7 @@ import (
 	monstera "github.com/evrblk/monstera"
 	corepb "github.com/evrblk/monstera-example/ledger/corepb"
 	monsterax "github.com/evrblk/monstera/x"
+	proto "google.golang.org/protobuf/proto"
 	"sync"
 )
 
@@ -29,12 +30,22 @@ var _ LedgerServiceCoreApi = &LedgerServiceCoreApiMonsteraStub{}
 
 func (s *LedgerServiceCoreApiMonsteraStub) ListTransactions(ctx context.Context, request *corepb.ListTransactionsRequest) (*corepb.ListTransactionsResponse, error) {
 	readRequest := &corepb.ReadRequest{Request: &corepb.ReadRequest_ListTransactionsRequest{ListTransactionsRequest: request}}
-	readResponse := &corepb.ReadResponse{}
+	requestBytes, err := proto.Marshal(readRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.ListTransactionsShardKey(request)
 
-	err := s.monsteraClient.Read(ctx, "Accounts", shardKey, false, readRequest, readResponse)
+	responseBytes, err := s.monsteraClient.Read(ctx, "Accounts", shardKey, false, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	readResponse := &corepb.ReadResponse{}
+	err = proto.Unmarshal(responseBytes, readResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := readResponse.Response.(*corepb.ReadResponse_ListTransactionsResponse)
@@ -47,12 +58,22 @@ func (s *LedgerServiceCoreApiMonsteraStub) ListTransactions(ctx context.Context,
 
 func (s *LedgerServiceCoreApiMonsteraStub) GetTransaction(ctx context.Context, request *corepb.GetTransactionRequest) (*corepb.GetTransactionResponse, error) {
 	readRequest := &corepb.ReadRequest{Request: &corepb.ReadRequest_GetTransactionRequest{GetTransactionRequest: request}}
-	readResponse := &corepb.ReadResponse{}
+	requestBytes, err := proto.Marshal(readRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.GetTransactionShardKey(request)
 
-	err := s.monsteraClient.Read(ctx, "Accounts", shardKey, false, readRequest, readResponse)
+	responseBytes, err := s.monsteraClient.Read(ctx, "Accounts", shardKey, false, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	readResponse := &corepb.ReadResponse{}
+	err = proto.Unmarshal(responseBytes, readResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := readResponse.Response.(*corepb.ReadResponse_GetTransactionResponse)
@@ -65,12 +86,22 @@ func (s *LedgerServiceCoreApiMonsteraStub) GetTransaction(ctx context.Context, r
 
 func (s *LedgerServiceCoreApiMonsteraStub) GetAccount(ctx context.Context, request *corepb.GetAccountRequest) (*corepb.GetAccountResponse, error) {
 	readRequest := &corepb.ReadRequest{Request: &corepb.ReadRequest_GetAccountRequest{GetAccountRequest: request}}
-	readResponse := &corepb.ReadResponse{}
+	requestBytes, err := proto.Marshal(readRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.GetAccountShardKey(request)
 
-	err := s.monsteraClient.Read(ctx, "Accounts", shardKey, false, readRequest, readResponse)
+	responseBytes, err := s.monsteraClient.Read(ctx, "Accounts", shardKey, false, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	readResponse := &corepb.ReadResponse{}
+	err = proto.Unmarshal(responseBytes, readResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := readResponse.Response.(*corepb.ReadResponse_GetAccountResponse)
@@ -83,12 +114,22 @@ func (s *LedgerServiceCoreApiMonsteraStub) GetAccount(ctx context.Context, reque
 
 func (s *LedgerServiceCoreApiMonsteraStub) CreateTransaction(ctx context.Context, request *corepb.CreateTransactionRequest) (*corepb.CreateTransactionResponse, error) {
 	updateRequest := &corepb.UpdateRequest{Request: &corepb.UpdateRequest_CreateTransactionRequest{CreateTransactionRequest: request}}
-	updateResponse := &corepb.UpdateResponse{}
+	requestBytes, err := proto.Marshal(updateRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.CreateTransactionShardKey(request)
 
-	err := s.monsteraClient.Update(ctx, "Accounts", shardKey, updateRequest, updateResponse)
+	responseBytes, err := s.monsteraClient.Update(ctx, "Accounts", shardKey, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	updateResponse := &corepb.UpdateResponse{}
+	err = proto.Unmarshal(responseBytes, updateResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_CreateTransactionResponse)
@@ -101,12 +142,22 @@ func (s *LedgerServiceCoreApiMonsteraStub) CreateTransaction(ctx context.Context
 
 func (s *LedgerServiceCoreApiMonsteraStub) CancelTransaction(ctx context.Context, request *corepb.CancelTransactionRequest) (*corepb.CancelTransactionResponse, error) {
 	updateRequest := &corepb.UpdateRequest{Request: &corepb.UpdateRequest_CancelTransactionRequest{CancelTransactionRequest: request}}
-	updateResponse := &corepb.UpdateResponse{}
+	requestBytes, err := proto.Marshal(updateRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.CancelTransactionShardKey(request)
 
-	err := s.monsteraClient.Update(ctx, "Accounts", shardKey, updateRequest, updateResponse)
+	responseBytes, err := s.monsteraClient.Update(ctx, "Accounts", shardKey, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	updateResponse := &corepb.UpdateResponse{}
+	err = proto.Unmarshal(responseBytes, updateResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_CancelTransactionResponse)
@@ -119,12 +170,22 @@ func (s *LedgerServiceCoreApiMonsteraStub) CancelTransaction(ctx context.Context
 
 func (s *LedgerServiceCoreApiMonsteraStub) SettleTransaction(ctx context.Context, request *corepb.SettleTransactionRequest) (*corepb.SettleTransactionResponse, error) {
 	updateRequest := &corepb.UpdateRequest{Request: &corepb.UpdateRequest_SettleTransactionRequest{SettleTransactionRequest: request}}
-	updateResponse := &corepb.UpdateResponse{}
+	requestBytes, err := proto.Marshal(updateRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.SettleTransactionShardKey(request)
 
-	err := s.monsteraClient.Update(ctx, "Accounts", shardKey, updateRequest, updateResponse)
+	responseBytes, err := s.monsteraClient.Update(ctx, "Accounts", shardKey, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	updateResponse := &corepb.UpdateResponse{}
+	err = proto.Unmarshal(responseBytes, updateResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_SettleTransactionResponse)
@@ -137,12 +198,22 @@ func (s *LedgerServiceCoreApiMonsteraStub) SettleTransaction(ctx context.Context
 
 func (s *LedgerServiceCoreApiMonsteraStub) CreateAccount(ctx context.Context, request *corepb.CreateAccountRequest) (*corepb.CreateAccountResponse, error) {
 	updateRequest := &corepb.UpdateRequest{Request: &corepb.UpdateRequest_CreateAccountRequest{CreateAccountRequest: request}}
-	updateResponse := &corepb.UpdateResponse{}
+	requestBytes, err := proto.Marshal(updateRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.CreateAccountShardKey(request)
 
-	err := s.monsteraClient.Update(ctx, "Accounts", shardKey, updateRequest, updateResponse)
+	responseBytes, err := s.monsteraClient.Update(ctx, "Accounts", shardKey, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	updateResponse := &corepb.UpdateResponse{}
+	err = proto.Unmarshal(responseBytes, updateResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_CreateAccountResponse)

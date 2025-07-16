@@ -7,6 +7,7 @@ import (
 	monstera "github.com/evrblk/monstera"
 	corepb "github.com/evrblk/monstera-example/dlocks/corepb"
 	monsterax "github.com/evrblk/monstera/x"
+	proto "google.golang.org/protobuf/proto"
 	"sync"
 )
 
@@ -38,12 +39,22 @@ var _ LocksServiceCoreApi = &LocksServiceCoreApiMonsteraStub{}
 
 func (s *LocksServiceCoreApiMonsteraStub) ListAccounts(ctx context.Context, request *corepb.ListAccountsRequest) (*corepb.ListAccountsResponse, error) {
 	readRequest := &corepb.ReadRequest{Request: &corepb.ReadRequest_ListAccountsRequest{ListAccountsRequest: request}}
-	readResponse := &corepb.ReadResponse{}
+	requestBytes, err := proto.Marshal(readRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.ListAccountsShardKey(request)
 
-	err := s.monsteraClient.Read(ctx, "Accounts", shardKey, false, readRequest, readResponse)
+	responseBytes, err := s.monsteraClient.Read(ctx, "Accounts", shardKey, false, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	readResponse := &corepb.ReadResponse{}
+	err = proto.Unmarshal(responseBytes, readResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := readResponse.Response.(*corepb.ReadResponse_ListAccountsResponse)
@@ -56,12 +67,22 @@ func (s *LocksServiceCoreApiMonsteraStub) ListAccounts(ctx context.Context, requ
 
 func (s *LocksServiceCoreApiMonsteraStub) GetAccount(ctx context.Context, request *corepb.GetAccountRequest) (*corepb.GetAccountResponse, error) {
 	readRequest := &corepb.ReadRequest{Request: &corepb.ReadRequest_GetAccountRequest{GetAccountRequest: request}}
-	readResponse := &corepb.ReadResponse{}
+	requestBytes, err := proto.Marshal(readRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.GetAccountShardKey(request)
 
-	err := s.monsteraClient.Read(ctx, "Accounts", shardKey, false, readRequest, readResponse)
+	responseBytes, err := s.monsteraClient.Read(ctx, "Accounts", shardKey, false, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	readResponse := &corepb.ReadResponse{}
+	err = proto.Unmarshal(responseBytes, readResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := readResponse.Response.(*corepb.ReadResponse_GetAccountResponse)
@@ -74,12 +95,22 @@ func (s *LocksServiceCoreApiMonsteraStub) GetAccount(ctx context.Context, reques
 
 func (s *LocksServiceCoreApiMonsteraStub) CreateAccount(ctx context.Context, request *corepb.CreateAccountRequest) (*corepb.CreateAccountResponse, error) {
 	updateRequest := &corepb.UpdateRequest{Request: &corepb.UpdateRequest_CreateAccountRequest{CreateAccountRequest: request}}
-	updateResponse := &corepb.UpdateResponse{}
+	requestBytes, err := proto.Marshal(updateRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.CreateAccountShardKey(request)
 
-	err := s.monsteraClient.Update(ctx, "Accounts", shardKey, updateRequest, updateResponse)
+	responseBytes, err := s.monsteraClient.Update(ctx, "Accounts", shardKey, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	updateResponse := &corepb.UpdateResponse{}
+	err = proto.Unmarshal(responseBytes, updateResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_CreateAccountResponse)
@@ -92,12 +123,22 @@ func (s *LocksServiceCoreApiMonsteraStub) CreateAccount(ctx context.Context, req
 
 func (s *LocksServiceCoreApiMonsteraStub) UpdateAccount(ctx context.Context, request *corepb.UpdateAccountRequest) (*corepb.UpdateAccountResponse, error) {
 	updateRequest := &corepb.UpdateRequest{Request: &corepb.UpdateRequest_UpdateAccountRequest{UpdateAccountRequest: request}}
-	updateResponse := &corepb.UpdateResponse{}
+	requestBytes, err := proto.Marshal(updateRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.UpdateAccountShardKey(request)
 
-	err := s.monsteraClient.Update(ctx, "Accounts", shardKey, updateRequest, updateResponse)
+	responseBytes, err := s.monsteraClient.Update(ctx, "Accounts", shardKey, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	updateResponse := &corepb.UpdateResponse{}
+	err = proto.Unmarshal(responseBytes, updateResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_UpdateAccountResponse)
@@ -110,12 +151,22 @@ func (s *LocksServiceCoreApiMonsteraStub) UpdateAccount(ctx context.Context, req
 
 func (s *LocksServiceCoreApiMonsteraStub) DeleteAccount(ctx context.Context, request *corepb.DeleteAccountRequest) (*corepb.DeleteAccountResponse, error) {
 	updateRequest := &corepb.UpdateRequest{Request: &corepb.UpdateRequest_DeleteAccountRequest{DeleteAccountRequest: request}}
-	updateResponse := &corepb.UpdateResponse{}
+	requestBytes, err := proto.Marshal(updateRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.DeleteAccountShardKey(request)
 
-	err := s.monsteraClient.Update(ctx, "Accounts", shardKey, updateRequest, updateResponse)
+	responseBytes, err := s.monsteraClient.Update(ctx, "Accounts", shardKey, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	updateResponse := &corepb.UpdateResponse{}
+	err = proto.Unmarshal(responseBytes, updateResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_DeleteAccountResponse)
@@ -128,12 +179,22 @@ func (s *LocksServiceCoreApiMonsteraStub) DeleteAccount(ctx context.Context, req
 
 func (s *LocksServiceCoreApiMonsteraStub) GetNamespace(ctx context.Context, request *corepb.GetNamespaceRequest) (*corepb.GetNamespaceResponse, error) {
 	readRequest := &corepb.ReadRequest{Request: &corepb.ReadRequest_GetNamespaceRequest{GetNamespaceRequest: request}}
-	readResponse := &corepb.ReadResponse{}
+	requestBytes, err := proto.Marshal(readRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.GetNamespaceShardKey(request)
 
-	err := s.monsteraClient.Read(ctx, "Namespaces", shardKey, false, readRequest, readResponse)
+	responseBytes, err := s.monsteraClient.Read(ctx, "Namespaces", shardKey, false, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	readResponse := &corepb.ReadResponse{}
+	err = proto.Unmarshal(responseBytes, readResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := readResponse.Response.(*corepb.ReadResponse_GetNamespaceResponse)
@@ -146,12 +207,22 @@ func (s *LocksServiceCoreApiMonsteraStub) GetNamespace(ctx context.Context, requ
 
 func (s *LocksServiceCoreApiMonsteraStub) ListNamespaces(ctx context.Context, request *corepb.ListNamespacesRequest) (*corepb.ListNamespacesResponse, error) {
 	readRequest := &corepb.ReadRequest{Request: &corepb.ReadRequest_ListNamespacesRequest{ListNamespacesRequest: request}}
-	readResponse := &corepb.ReadResponse{}
+	requestBytes, err := proto.Marshal(readRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.ListNamespacesShardKey(request)
 
-	err := s.monsteraClient.Read(ctx, "Namespaces", shardKey, false, readRequest, readResponse)
+	responseBytes, err := s.monsteraClient.Read(ctx, "Namespaces", shardKey, false, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	readResponse := &corepb.ReadResponse{}
+	err = proto.Unmarshal(responseBytes, readResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := readResponse.Response.(*corepb.ReadResponse_ListNamespacesResponse)
@@ -164,12 +235,22 @@ func (s *LocksServiceCoreApiMonsteraStub) ListNamespaces(ctx context.Context, re
 
 func (s *LocksServiceCoreApiMonsteraStub) CreateNamespace(ctx context.Context, request *corepb.CreateNamespaceRequest) (*corepb.CreateNamespaceResponse, error) {
 	updateRequest := &corepb.UpdateRequest{Request: &corepb.UpdateRequest_CreateNamespaceRequest{CreateNamespaceRequest: request}}
-	updateResponse := &corepb.UpdateResponse{}
+	requestBytes, err := proto.Marshal(updateRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.CreateNamespaceShardKey(request)
 
-	err := s.monsteraClient.Update(ctx, "Namespaces", shardKey, updateRequest, updateResponse)
+	responseBytes, err := s.monsteraClient.Update(ctx, "Namespaces", shardKey, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	updateResponse := &corepb.UpdateResponse{}
+	err = proto.Unmarshal(responseBytes, updateResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_CreateNamespaceResponse)
@@ -182,12 +263,22 @@ func (s *LocksServiceCoreApiMonsteraStub) CreateNamespace(ctx context.Context, r
 
 func (s *LocksServiceCoreApiMonsteraStub) UpdateNamespace(ctx context.Context, request *corepb.UpdateNamespaceRequest) (*corepb.UpdateNamespaceResponse, error) {
 	updateRequest := &corepb.UpdateRequest{Request: &corepb.UpdateRequest_UpdateNamespaceRequest{UpdateNamespaceRequest: request}}
-	updateResponse := &corepb.UpdateResponse{}
+	requestBytes, err := proto.Marshal(updateRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.UpdateNamespaceShardKey(request)
 
-	err := s.monsteraClient.Update(ctx, "Namespaces", shardKey, updateRequest, updateResponse)
+	responseBytes, err := s.monsteraClient.Update(ctx, "Namespaces", shardKey, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	updateResponse := &corepb.UpdateResponse{}
+	err = proto.Unmarshal(responseBytes, updateResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_UpdateNamespaceResponse)
@@ -200,12 +291,22 @@ func (s *LocksServiceCoreApiMonsteraStub) UpdateNamespace(ctx context.Context, r
 
 func (s *LocksServiceCoreApiMonsteraStub) DeleteNamespace(ctx context.Context, request *corepb.DeleteNamespaceRequest) (*corepb.DeleteNamespaceResponse, error) {
 	updateRequest := &corepb.UpdateRequest{Request: &corepb.UpdateRequest_DeleteNamespaceRequest{DeleteNamespaceRequest: request}}
-	updateResponse := &corepb.UpdateResponse{}
+	requestBytes, err := proto.Marshal(updateRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.DeleteNamespaceShardKey(request)
 
-	err := s.monsteraClient.Update(ctx, "Namespaces", shardKey, updateRequest, updateResponse)
+	responseBytes, err := s.monsteraClient.Update(ctx, "Namespaces", shardKey, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	updateResponse := &corepb.UpdateResponse{}
+	err = proto.Unmarshal(responseBytes, updateResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_DeleteNamespaceResponse)
@@ -218,12 +319,22 @@ func (s *LocksServiceCoreApiMonsteraStub) DeleteNamespace(ctx context.Context, r
 
 func (s *LocksServiceCoreApiMonsteraStub) AcquireLock(ctx context.Context, request *corepb.AcquireLockRequest) (*corepb.AcquireLockResponse, error) {
 	updateRequest := &corepb.UpdateRequest{Request: &corepb.UpdateRequest_AcquireLockRequest{AcquireLockRequest: request}}
-	updateResponse := &corepb.UpdateResponse{}
+	requestBytes, err := proto.Marshal(updateRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.AcquireLockShardKey(request)
 
-	err := s.monsteraClient.Update(ctx, "Locks", shardKey, updateRequest, updateResponse)
+	responseBytes, err := s.monsteraClient.Update(ctx, "Locks", shardKey, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	updateResponse := &corepb.UpdateResponse{}
+	err = proto.Unmarshal(responseBytes, updateResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_AcquireLockResponse)
@@ -236,12 +347,22 @@ func (s *LocksServiceCoreApiMonsteraStub) AcquireLock(ctx context.Context, reque
 
 func (s *LocksServiceCoreApiMonsteraStub) ReleaseLock(ctx context.Context, request *corepb.ReleaseLockRequest) (*corepb.ReleaseLockResponse, error) {
 	updateRequest := &corepb.UpdateRequest{Request: &corepb.UpdateRequest_ReleaseLockRequest{ReleaseLockRequest: request}}
-	updateResponse := &corepb.UpdateResponse{}
+	requestBytes, err := proto.Marshal(updateRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.ReleaseLockShardKey(request)
 
-	err := s.monsteraClient.Update(ctx, "Locks", shardKey, updateRequest, updateResponse)
+	responseBytes, err := s.monsteraClient.Update(ctx, "Locks", shardKey, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	updateResponse := &corepb.UpdateResponse{}
+	err = proto.Unmarshal(responseBytes, updateResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_ReleaseLockResponse)
@@ -254,12 +375,22 @@ func (s *LocksServiceCoreApiMonsteraStub) ReleaseLock(ctx context.Context, reque
 
 func (s *LocksServiceCoreApiMonsteraStub) DeleteLock(ctx context.Context, request *corepb.DeleteLockRequest) (*corepb.DeleteLockResponse, error) {
 	updateRequest := &corepb.UpdateRequest{Request: &corepb.UpdateRequest_DeleteLockRequest{DeleteLockRequest: request}}
-	updateResponse := &corepb.UpdateResponse{}
+	requestBytes, err := proto.Marshal(updateRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.DeleteLockShardKey(request)
 
-	err := s.monsteraClient.Update(ctx, "Locks", shardKey, updateRequest, updateResponse)
+	responseBytes, err := s.monsteraClient.Update(ctx, "Locks", shardKey, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	updateResponse := &corepb.UpdateResponse{}
+	err = proto.Unmarshal(responseBytes, updateResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_DeleteLockResponse)
@@ -272,12 +403,22 @@ func (s *LocksServiceCoreApiMonsteraStub) DeleteLock(ctx context.Context, reques
 
 func (s *LocksServiceCoreApiMonsteraStub) GetLock(ctx context.Context, request *corepb.GetLockRequest) (*corepb.GetLockResponse, error) {
 	updateRequest := &corepb.UpdateRequest{Request: &corepb.UpdateRequest_GetLockRequest{GetLockRequest: request}}
-	updateResponse := &corepb.UpdateResponse{}
+	requestBytes, err := proto.Marshal(updateRequest)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to marshal request", map[string]string{"error": err.Error()})
+	}
+
 	shardKey := s.shardKeyCalculator.GetLockShardKey(request)
 
-	err := s.monsteraClient.Update(ctx, "Locks", shardKey, updateRequest, updateResponse)
+	responseBytes, err := s.monsteraClient.Update(ctx, "Locks", shardKey, requestBytes)
 	if err != nil {
 		return nil, err
+	}
+
+	updateResponse := &corepb.UpdateResponse{}
+	err = proto.Unmarshal(responseBytes, updateResponse)
+	if err != nil {
+		return nil, monsterax.NewErrorWithContext(monsterax.Internal, "failed to unmarshal response", map[string]string{"error": err.Error()})
 	}
 
 	response, ok := updateResponse.Response.(*corepb.UpdateResponse_GetLockResponse)
