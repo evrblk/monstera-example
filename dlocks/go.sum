@@ -37,6 +37,8 @@ github.com/evrblk/monstera v0.0.0-20250716202132-ed33c5d2349b h1:0YIP5DB2pLTs1Xu
 github.com/evrblk/monstera v0.0.0-20250716202132-ed33c5d2349b/go.mod h1:yS9TChWH9szQC4OKdbeEwOGaGK5yy+2eOkK7XLJDxn0=
 github.com/evrblk/monstera v0.0.0-20250716202651-060a42e9318b h1:VBHxiBD23fdxMG4s0a2v8IcnqjZVmSxZnPoAg6p57NI=
 github.com/evrblk/monstera v0.0.0-20250716202651-060a42e9318b/go.mod h1:yS9TChWH9szQC4OKdbeEwOGaGK5yy+2eOkK7XLJDxn0=
+github.com/evrblk/monstera v0.0.0-20250725185357-b140112bfa85 h1:LAwiBpx1YOIDmbkiYQ0niOFGfgzyiqXCp/h+x9aaVes=
+github.com/evrblk/monstera v0.0.0-20250725185357-b140112bfa85/go.mod h1:yS9TChWH9szQC4OKdbeEwOGaGK5yy+2eOkK7XLJDxn0=
 github.com/fatih/color v1.13.0/go.mod h1:kLAiJbzzSOZDVNGyDpeOxJ47H46qBXwg5ILebYFFOfk=
 github.com/fatih/color v1.18.0 h1:S8gINlzdQ840/4pfAwic/ZE0djQEH3wM94VfqLTZcOM=
 github.com/fatih/color v1.18.0/go.mod h1:4FelSpRwEGDpQ12mAdzqdOukCy4u8WUtOY6lkT/6HfU=

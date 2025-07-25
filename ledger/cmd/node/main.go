@@ -31,28 +31,26 @@ func main() {
 	flag.Parse()
 
 	// Load monstera cluster config
-	data, err := os.ReadFile(*monsteraConfigPath)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	clusterConfig, err := monstera.LoadConfigFromProto(data)
+	clusterConfig, err := monstera.LoadConfigFromFile(*monsteraConfigPath)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	dataStore := monstera.NewBadgerStore(filepath.Join(*dataDir, "data"))
-	raftStore := monstera.NewBadgerStore(filepath.Join(*dataDir, "raft"))
 
-	monsteraNode := monstera.NewNode(*dataDir, *nodeId, clusterConfig, raftStore, monstera.DefaultMonsteraNodeConfig)
-
-	monsteraNode.RegisterApplicationCore(&monstera.ApplicationCoreDescriptor{
-		Name:                   "Accounts",
-		RestoreSnapshotOnStart: false,
-		CoreFactoryFunc: func(application *monstera.Application, shard *monstera.Shard, replica *monstera.Replica) monstera.ApplicationCore {
-			return ledger.NewAccountsCoreAdapter(ledger.NewAccountsCore(dataStore, shard.LowerBound, shard.UpperBound))
+	coreDescriptors := monstera.ApplicationCoreDescriptors{
+		"Accounts": {
+			RestoreSnapshotOnStart: false,
+			CoreFactoryFunc: func(shard *monstera.Shard, replica *monstera.Replica) monstera.ApplicationCore {
+				return ledger.NewAccountsCoreAdapter(ledger.NewAccountsCore(dataStore, shard.LowerBound, shard.UpperBound))
+			},
 		},
-	})
+	}
+
+	monsteraNode, err := monstera.NewNode(*dataDir, *nodeId, clusterConfig, coreDescriptors, monstera.DefaultMonsteraNodeConfig)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Starting Monstera node
 	monsteraNode.Start()
@@ -84,7 +82,6 @@ func main() {
 			monsteraNode.Stop()
 			grpcServer.GracefulStop()
 			dataStore.Close()
-			raftStore.Close()
 		case <-ctx.Done():
 		}
 		cleanupDone.Done()

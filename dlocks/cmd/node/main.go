@@ -42,31 +42,29 @@ func main() {
 	}
 
 	dataStore := monstera.NewBadgerStore(filepath.Join(*dataDir, "data"))
-	raftStore := monstera.NewBadgerStore(filepath.Join(*dataDir, "raft"))
 
-	monsteraNode := monstera.NewNode(*dataDir, *nodeId, clusterConfig, raftStore, monstera.DefaultMonsteraNodeConfig)
+	coreDescriptors := monstera.ApplicationCoreDescriptors{
+		"Locks": {
+			RestoreSnapshotOnStart: false,
+			CoreFactoryFunc: func(shard *monstera.Shard, replica *monstera.Replica) monstera.ApplicationCore {
+				return dlocks.NewLocksCoreAdapter(dlocks.NewLocksCore(dataStore, shard.LowerBound, shard.UpperBound))
+			},
+		},
+		"Namespaces": {
+			RestoreSnapshotOnStart: false,
+			CoreFactoryFunc: func(shard *monstera.Shard, replica *monstera.Replica) monstera.ApplicationCore {
+				return dlocks.NewNamespacesCoreAdapter(dlocks.NewNamespacesCore(dataStore, shard.LowerBound, shard.UpperBound))
+			},
+		},
+		"Accounts": {
+			RestoreSnapshotOnStart: false,
+			CoreFactoryFunc: func(shard *monstera.Shard, replica *monstera.Replica) monstera.ApplicationCore {
+				return dlocks.NewAccountsCoreAdapter(dlocks.NewAccountsCore(dataStore))
+			},
+		},
+	}
 
-	monsteraNode.RegisterApplicationCore(&monstera.ApplicationCoreDescriptor{
-		Name:                   "Locks",
-		RestoreSnapshotOnStart: false,
-		CoreFactoryFunc: func(application *monstera.Application, shard *monstera.Shard, replica *monstera.Replica) monstera.ApplicationCore {
-			return dlocks.NewLocksCoreAdapter(dlocks.NewLocksCore(dataStore, shard.LowerBound, shard.UpperBound))
-		},
-	})
-	monsteraNode.RegisterApplicationCore(&monstera.ApplicationCoreDescriptor{
-		Name:                   "Namespaces",
-		RestoreSnapshotOnStart: false,
-		CoreFactoryFunc: func(application *monstera.Application, shard *monstera.Shard, replica *monstera.Replica) monstera.ApplicationCore {
-			return dlocks.NewNamespacesCoreAdapter(dlocks.NewNamespacesCore(dataStore, shard.LowerBound, shard.UpperBound))
-		},
-	})
-	monsteraNode.RegisterApplicationCore(&monstera.ApplicationCoreDescriptor{
-		Name:                   "Accounts",
-		RestoreSnapshotOnStart: false,
-		CoreFactoryFunc: func(application *monstera.Application, shard *monstera.Shard, replica *monstera.Replica) monstera.ApplicationCore {
-			return dlocks.NewAccountsCoreAdapter(dlocks.NewAccountsCore(dataStore))
-		},
-	})
+	monsteraNode, err := monstera.NewNode(*dataDir, *nodeId, clusterConfig, coreDescriptors, monstera.DefaultMonsteraNodeConfig)
 
 	// Starting Monstera node
 	monsteraNode.Start()
@@ -98,7 +96,6 @@ func main() {
 			monsteraNode.Stop()
 			grpcServer.GracefulStop()
 			dataStore.Close()
-			raftStore.Close()
 		case <-ctx.Done():
 		}
 		cleanupDone.Done()
